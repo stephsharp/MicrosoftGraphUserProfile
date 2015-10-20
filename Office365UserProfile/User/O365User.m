@@ -4,6 +4,8 @@
 
 - (instancetype)initWithId:(NSString *)objectId
                displayName:(NSString *)displayName
+                 givenName:(NSString *)givenName
+                   surname:(NSString *)surname
                   jobTitle:(NSString *)jobTitle
                 department:(NSString *)department
                       city:(NSString *)city
@@ -16,6 +18,8 @@
     if (self) {
         _objectId = objectId;
         _displayName = displayName;
+        _givenName = givenName;
+        _surname = surname;
         _jobTitle = jobTitle;
         _department = department;
         _city = city;
@@ -33,6 +37,8 @@
 {
     return [self initWithId:objectId
                 displayName:displayName
+                  givenName:nil
+                    surname:nil
                    jobTitle:jobTitle
                  department:nil
                        city:nil

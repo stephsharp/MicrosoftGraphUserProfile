@@ -90,7 +90,7 @@ static NSString * const RESOURCE_ID_STRING = @"https://graph.microsoft.com/";
                                                                         for (NSDictionary *userData in jsonPayload[@"value"]) {
                                                                             
                                                                             NSString *objectId;
-                                                                            
+
                                                                             if(userData[@"objectId"])
                                                                             {
                                                                                 objectId = userData[@"objectId"];
@@ -99,9 +99,9 @@ static NSString * const RESOURCE_ID_STRING = @"https://graph.microsoft.com/";
                                                                             {
                                                                                 objectId = @"";
                                                                             }
-                                                                            
+
                                                                             NSString *displayName;
-                                                                            
+
                                                                             if(userData[@"displayName"] && userData[@"displayName"] != [NSNull null])
                                                                             {
                                                                                 displayName = userData[@"displayName"];
@@ -110,9 +110,53 @@ static NSString * const RESOURCE_ID_STRING = @"https://graph.microsoft.com/";
                                                                             {
                                                                                 displayName = @"";
                                                                             }
-                                                                            
+
+                                                                            NSString *givenName;
+
+                                                                            if(userData[@"givenName"] && userData[@"givenName"] != [NSNull null])
+                                                                            {
+                                                                                givenName = userData[@"givenName"];
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                givenName = @"";
+                                                                            }
+
+                                                                            NSString *surname;
+
+                                                                            if(userData[@"surname"] && userData[@"surname"] != [NSNull null])
+                                                                            {
+                                                                                surname = userData[@"surname"];
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                surname = @"";
+                                                                            }
+
+                                                                            NSString *city;
+
+                                                                            if(userData[@"city"] && userData[@"city"] != [NSNull null])
+                                                                            {
+                                                                                city = userData[@"city"];
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                city = @"";
+                                                                            }
+
+                                                                            NSString *department;
+
+                                                                            if(userData[@"department"] && userData[@"department"] != [NSNull null])
+                                                                            {
+                                                                                department = userData[@"department"];
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                department = @"";
+                                                                            }
+
                                                                             NSString *jobTitle;
-                                                                            
+
                                                                             if(userData[@"jobTitle"] && userData[@"jobTitle"] != [NSNull null])
                                                                             {
                                                                                 jobTitle = userData[@"jobTitle"];
@@ -121,10 +165,50 @@ static NSString * const RESOURCE_ID_STRING = @"https://graph.microsoft.com/";
                                                                             {
                                                                                 jobTitle = @"";
                                                                             }
-                                                                            
+
+                                                                            NSString *mobile;
+
+                                                                            if(userData[@"mobile"] && userData[@"mobile"] != [NSNull null])
+                                                                            {
+                                                                                mobile = userData[@"mobile"];
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                mobile = @"";
+                                                                            }
+
+                                                                            NSString *phone;
+
+                                                                            if(userData[@"telephoneNumber"] && userData[@"telephoneNumber"] != [NSNull null])
+                                                                            {
+                                                                                phone = userData[@"telephoneNumber"];
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                phone = @"";
+                                                                            }
+
+                                                                            NSString *email;
+
+                                                                            if(userData[@"mail"] && userData[@"mail"] != [NSNull null])
+                                                                            {
+                                                                                email = userData[@"mail"];
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                email = @"";
+                                                                            }
+
                                                                             O365User *user = [[O365User alloc] initWithId:objectId
                                                                                                               displayName:displayName
-                                                                                                                 jobTitle:jobTitle];
+                                                                                                                givenName:givenName
+                                                                                                                  surname:surname
+                                                                                                                 jobTitle:jobTitle
+                                                                                                               department:department
+                                                                                                                     city:city
+                                                                                                                   mobile:mobile
+                                                                                                                    phone:phone
+                                                                                                                    email:email];
                                                                             [users addObject:user];
                                                                             
                                                                         }
@@ -204,7 +288,29 @@ static NSString * const RESOURCE_ID_STRING = @"https://graph.microsoft.com/";
                                                                         {
                                                                             displayName = @"";
                                                                         }
-                                                                        
+
+                                                                        NSString *givenName;
+
+                                                                        if(jsonPayload[@"givenName"] && jsonPayload[@"givenName"] != [NSNull null])
+                                                                        {
+                                                                            givenName = jsonPayload[@"givenName"];
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            givenName = @"";
+                                                                        }
+
+                                                                        NSString *surname;
+
+                                                                        if(jsonPayload[@"surname"] && jsonPayload[@"surname"] != [NSNull null])
+                                                                        {
+                                                                            surname = jsonPayload[@"surname"];
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            surname = @"";
+                                                                        }
+
                                                                         NSString *city;
                                                                         
                                                                         if(jsonPayload[@"city"] && jsonPayload[@"city"] != [NSNull null])
@@ -275,6 +381,8 @@ static NSString * const RESOURCE_ID_STRING = @"https://graph.microsoft.com/";
 
                                                                         O365User *user = [[O365User alloc] initWithId:objectId
                                                                                                           displayName:displayName
+                                                                                                            givenName:givenName
+                                                                                                              surname:surname
                                                                                                              jobTitle:jobTitle
                                                                                                            department:department
                                                                                                                  city:city

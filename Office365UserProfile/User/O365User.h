@@ -4,6 +4,8 @@
 
 @property (readonly, nonatomic) NSString *objectId;
 @property (readonly, nonatomic) NSString *displayName;
+@property (readonly, nonatomic) NSString *givenName;
+@property (readonly, nonatomic) NSString *surname;
 @property (readonly, nonatomic) NSString *jobTitle;
 @property (readonly, nonatomic) NSString *department;
 @property (readonly, nonatomic) NSString *city;
@@ -13,6 +15,8 @@
 
 - (instancetype)initWithId:(NSString *)objectId
                displayName:(NSString *)displayName
+                 givenName:(NSString *)givenName
+                   surname:(NSString *)surname
                   jobTitle:(NSString *)jobTitle
                 department:(NSString *)department
                       city:(NSString *)city
