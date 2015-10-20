@@ -54,17 +54,13 @@ static NSString * const RESOURCE_ID_STRING = @"https://graph.microsoft.com/";
                                             NSURLSession *delegateFreeSession = [NSURLSession sessionWithConfiguration:
                                                                                  config delegate: nil delegateQueue: [NSOperationQueue mainQueue]];
                                             
-                                            NSString *requestURL = [NSString stringWithFormat:@"%@%@", _baseURL, @"users?$filter=userType%20eq%20'Member'"];
-                                            
+                                            NSString *requestURL = [NSString stringWithFormat:@"%@%@", _baseURL, @"users?$orderby=displayName"];
                                             
                                             NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL: [NSURL URLWithString:requestURL]];
                                             
                                             
                                             NSString *authorization = [NSString stringWithFormat:@"Bearer %@", accessToken];
-
-                                            NSString *auth = [NSString stringWithFormat:@"AUTHTOKEN: \"%@\"", authorization];
-                                            NSLog(auth);
-                                            
+                                            //NSLog([NSString stringWithFormat:@"AUTHTOKEN: \"%@\"", authorization]);
                                             
                                             [theRequest setValue:authorization forHTTPHeaderField:@"Authorization"];
                                             
