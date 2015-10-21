@@ -38,15 +38,14 @@ static NSString * const RESOURCE_ID_STRING = @"https://graph.microsoft.com/";
 }
 
 //Fetches all the users from the Active Directory
-- (void)fetchAllUsersWithCompletionHandler:(void (^)(NSArray *, NSError *)) completionHandler
+- (void)fetchAllUsersWithRequestURL:(NSString *)urlString completionHandler:(void (^)(NSArray *allUsers, NSString *nextPage, NSError *error))completionHandler
 {
     [self.authenticationManager acquireAuthTokenWithResourceId:_resourceID
                                         completionHandler:^(ADAuthenticationResult *result, NSError *error) {
                                             if (error) {
-                                                completionHandler(nil,error);
+                                                completionHandler(nil, nil, error);
                                                 return;
                                             }
-                                            
                                             
                                             NSString *accessToken = result.tokenCacheStoreItem.accessToken;
                                             
@@ -54,13 +53,15 @@ static NSString * const RESOURCE_ID_STRING = @"https://graph.microsoft.com/";
                                             NSURLSession *delegateFreeSession = [NSURLSession sessionWithConfiguration:
                                                                                  config delegate: nil delegateQueue: [NSOperationQueue mainQueue]];
                                             
-                                            NSString *requestURL = [NSString stringWithFormat:@"%@%@", _baseURL, @"users?$orderby=displayName"];
+                                            NSString *requestURL = urlString ?: [NSString stringWithFormat:@"%@%@", _baseURL, @"users?$orderby=displayName"];
                                             
                                             NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL: [NSURL URLWithString:requestURL]];
                                             
                                             
                                             NSString *authorization = [NSString stringWithFormat:@"Bearer %@", accessToken];
-                                            //NSLog([NSString stringWithFormat:@"AUTHTOKEN: \"%@\"", authorization]);
+
+                                            NSLog([NSString stringWithFormat:@"AUTHTOKEN: \"%@\"", authorization]);
+
                                             
                                             [theRequest setValue:authorization forHTTPHeaderField:@"Authorization"];
                                             
@@ -80,8 +81,9 @@ static NSString * const RESOURCE_ID_STRING = @"https://graph.microsoft.com/";
                                                                         NSDictionary *jsonPayload = [NSJSONSerialization JSONObjectWithData:data
                                                                                                                                     options:0
                                                                                                                                       error:NULL];
-                                                                        
-                                                                            NSMutableArray *users = [[NSMutableArray alloc] init];
+                                                                        jsonPayload = [self sanitizeKeysInDictionary:jsonPayload];
+
+                                                                        NSMutableArray *users = [[NSMutableArray alloc] init];
                                                                         
                                                                         for (NSDictionary *userData in jsonPayload[@"value"]) {
                                                                             
@@ -209,8 +211,9 @@ static NSString * const RESOURCE_ID_STRING = @"https://graph.microsoft.com/";
                                                                             
                                                                         }
                                                                         
-                                                                        
-                                                                        completionHandler(users, error);
+                                                                        NSString *nextPage = jsonPayload[@"nextLink"];
+                                                                        completionHandler(users, nextPage, error);
+
                                                                     }] resume];
                                             
                                         }];
@@ -435,6 +438,19 @@ static NSString * const RESOURCE_ID_STRING = @"https://graph.microsoft.com/";
                                             
                                         }];
 
+}
+
+
+- (NSDictionary *)sanitizeKeysInDictionary:(NSDictionary *)dictionary
+{
+    NSMutableDictionary *sanitizedMutableDictionary = [NSMutableDictionary new];
+
+    for (NSString *key in dictionary) {
+        NSString *sanitizedKey = [key stringByReplacingOccurrencesOfString:@"@odata." withString:@""];
+        sanitizedMutableDictionary[sanitizedKey] = dictionary[key];
+    }
+
+    return [sanitizedMutableDictionary copy];
 }
 
 @end

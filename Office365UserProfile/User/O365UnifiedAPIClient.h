@@ -14,10 +14,11 @@
  NS_DESIGNATED_INITIALIZER;
 - (instancetype)init NS_UNAVAILABLE;
 
-- (void)fetchAllUsersWithCompletionHandler:(void (^)(NSArray *allUsers, NSError *error))completionHandler;
+- (void)fetchAllUsersWithRequestURL:(NSString *)urlString
+                  completionHandler:(void (^)(NSArray *allUsers, NSString *nextPage, NSError *error))completionHandler;
 
 - (void)fetchUserWithId:(NSString *)userObjectID
-      completionHandler:(void (^)(O365User *, NSError *))completionHandler;
+      completionHandler:(void (^)(O365User *user, NSError *error))completionHandler;
 
 - (void)fetchPhotoWithUserId:(NSString *)userObjectID
            completionHandler:(void (^)(UIImage *image, NSError *error))completionHandler;
