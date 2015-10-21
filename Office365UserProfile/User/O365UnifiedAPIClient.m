@@ -397,6 +397,7 @@ static NSString * const RESOURCE_ID_STRING = @"https://graph.microsoft.com/";
 }
 
 - (void)fetchPhotoWithUserId:(NSString *)userObjectID
+                        size:(NSUInteger)size
            completionHandler:(void (^)(UIImage *image, NSError *error))completionHandler
 {
     [self.authenticationManager acquireAuthTokenWithResourceId:_resourceID
@@ -413,7 +414,10 @@ static NSString * const RESOURCE_ID_STRING = @"https://graph.microsoft.com/";
                                                                                                               delegate:nil
                                                                                                          delegateQueue:[NSOperationQueue mainQueue]];
 
-                                            NSString *requestURL = [NSString stringWithFormat:@"%@%@%@%@", _baseURL, @"users/", userObjectID, @"/userphoto/$value"];
+                                            NSString *sizeString = size > 0 ? [NSString stringWithFormat:@"%luX%lu/", size, (unsigned long)size] : @"";
+                                            NSString *userPhotoString = size > 0 ? @"/userphotos/" : @"/userphoto/";
+
+                                            NSString *requestURL = [NSString stringWithFormat:@"%@%@%@%@%@%@", _baseURL, @"users/", userObjectID, userPhotoString, sizeString, @"$value"];
 
                                             NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL: [NSURL URLWithString:requestURL]];
 
@@ -440,6 +444,15 @@ static NSString * const RESOURCE_ID_STRING = @"https://graph.microsoft.com/";
 
 }
 
++ (NSURL *)urlForPhotoWithUserId:(NSString *)userObjectID size:(NSUInteger)size
+{
+    NSString *sizeString = size > 0 ? [NSString stringWithFormat:@"%luX%lu/", size, (unsigned long)size] : @"";
+    NSString *userPhotoString = size > 0 ? @"/userphotos/" : @"/userphoto/";
+
+    NSString *requestURL = [NSString stringWithFormat:@"%@%@%@%@%@%@", BASE_URL_STRING, @"users/", userObjectID, userPhotoString, sizeString, @"$value"];
+
+    return [NSURL URLWithString:requestURL];
+}
 
 - (NSDictionary *)sanitizeKeysInDictionary:(NSDictionary *)dictionary
 {

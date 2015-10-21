@@ -20,8 +20,13 @@
 - (void)fetchUserWithId:(NSString *)userObjectID
       completionHandler:(void (^)(O365User *user, NSError *error))completionHandler;
 
+//- (void)fetchPhotoWithUserId:(NSString *)userObjectID
+//           completionHandler:(void (^)(UIImage *image, NSError *error))completionHandler;
 - (void)fetchPhotoWithUserId:(NSString *)userObjectID
+                        size:(NSUInteger)size
            completionHandler:(void (^)(UIImage *image, NSError *error))completionHandler;
+
++ (NSURL *)urlForPhotoWithUserId:(NSString *)userObjectID size:(NSUInteger)size;
 
 @end
 
