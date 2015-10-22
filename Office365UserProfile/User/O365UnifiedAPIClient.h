@@ -12,7 +12,6 @@
 //DO NOT FORGET END THE STRING WITH A '/'
 - (instancetype)initWithTenant:(NSString *)tenant
          authenticationManager:(O365AuthenticationManager *)authenticationManager NS_DESIGNATED_INITIALIZER;
-- (instancetype)initWithPlist:(NSString *)plist;
 - (instancetype)init NS_UNAVAILABLE;
 
 - (void)fetchAllUsersWithProgressHandler:(void (^)(NSArray *users, NSError *error))progressHandler
