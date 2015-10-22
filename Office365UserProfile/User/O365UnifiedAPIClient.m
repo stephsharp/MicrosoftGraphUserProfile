@@ -19,6 +19,8 @@ static NSString * const RESOURCE_ID_STRING = @"https://graph.microsoft.com/";
 
 @implementation O365UnifiedAPIClient
 
+#pragma mark - Initializers
+
 - (instancetype)initWithTenant:(NSString *)tenant authenticationManager:(O365AuthenticationManager *)authenticationManager
 {
     self = [super init];
@@ -55,6 +57,8 @@ static NSString * const RESOURCE_ID_STRING = @"https://graph.microsoft.com/";
     [self doesNotRecognizeSelector:_cmd];
     return nil;
 }
+
+#pragma mark - Public
 
 //Fetches all the users from the Active Directory
 - (void)fetchAllUsersWithRequestURL:(NSString *)urlString completionHandler:(void (^)(NSArray *allUsers, NSString *nextPage, NSError *error))completionHandler
@@ -100,6 +104,36 @@ static NSString * const RESOURCE_ID_STRING = @"https://graph.microsoft.com/";
         completionHandler(user, error);
     }];
 }
+
+- (void)fetchPhotoWithUserId:(NSString *)userObjectID
+                        size:(NSUInteger)size
+           completionHandler:(void (^)(UIImage *image, NSError *error))completionHandler
+{
+    NSURL *requestURL = [self urlForPhotoWithUserId:userObjectID size:size];
+    NSURLRequest *request = [NSURLRequest requestWithURL:requestURL];
+
+    [self fetchDataWithRequest:request completionHandler:^(NSData *data, NSError *error) {
+        UIImage *image = [UIImage imageWithData:data];
+        completionHandler(image, nil);
+    }];
+}
+
+- (NSURL *)urlForPhotoWithUserId:(NSString *)userObjectID size:(NSUInteger)size
+{
+    NSString *sizeString = @"";
+    NSString *userPhotoString = @"/userphoto/";
+
+    if (size > 0) {
+        sizeString = [NSString stringWithFormat:@"%luX%lu/", size, (unsigned long)size];
+        userPhotoString = @"/userphotos/";
+    }
+
+    NSString *requestURL = [NSString stringWithFormat:@"%@%@%@%@%@%@", _baseURL, @"users/", userObjectID, userPhotoString, sizeString, @"$value"];
+
+    return [NSURL URLWithString:requestURL];
+}
+
+#pragma mark - Private
 
 - (void)fetchDataWithRequest:(NSURLRequest *)request
            completionHandler:(void (^)(NSData *data, NSError *error))completionHandler
@@ -147,34 +181,6 @@ static NSString * const RESOURCE_ID_STRING = @"https://graph.microsoft.com/";
                                  mobile:[jsonDictionary stringForKey:@"mobile"]
                                   phone:[jsonDictionary stringForKey:@"telephoneNumber"]
                                   email:[jsonDictionary stringForKey:@"mail"]];
-}
-
-- (void)fetchPhotoWithUserId:(NSString *)userObjectID
-                        size:(NSUInteger)size
-           completionHandler:(void (^)(UIImage *image, NSError *error))completionHandler
-{
-    NSURL *requestURL = [self urlForPhotoWithUserId:userObjectID size:size];
-    NSURLRequest *request = [NSURLRequest requestWithURL:requestURL];
-
-    [self fetchDataWithRequest:request completionHandler:^(NSData *data, NSError *error) {
-        UIImage *image = [UIImage imageWithData:data];
-        completionHandler(image, nil);
-    }];
-}
-
-- (NSURL *)urlForPhotoWithUserId:(NSString *)userObjectID size:(NSUInteger)size
-{
-    NSString *sizeString = @"";
-    NSString *userPhotoString = @"/userphoto/";
-
-    if (size > 0) {
-        sizeString = [NSString stringWithFormat:@"%luX%lu/", size, (unsigned long)size];
-        userPhotoString = @"/userphotos/";
-    }
-
-    NSString *requestURL = [NSString stringWithFormat:@"%@%@%@%@%@%@", _baseURL, @"users/", userObjectID, userPhotoString, sizeString, @"$value"];
-
-    return [NSURL URLWithString:requestURL];
 }
 
 - (NSDictionary *)sanitizeKeysInDictionary:(NSDictionary *)dictionary
