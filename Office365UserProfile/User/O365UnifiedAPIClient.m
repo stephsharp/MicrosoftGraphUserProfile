@@ -162,115 +162,16 @@ static NSString * const RESOURCE_ID_STRING = @"https://graph.microsoft.com/";
 
 - (O365User *)userFromJSONDictionary:(NSDictionary *)jsonDictionary
 {
-    NSString *objectId;
-
-    if(jsonDictionary[@"objectId"])
-    {
-        objectId = jsonDictionary[@"objectId"];
-    }
-    else
-    {
-        objectId = @"";
-    }
-
-    NSString *displayName;
-
-    if(jsonDictionary[@"displayName"] && jsonDictionary[@"displayName"] != [NSNull null])
-    {
-        displayName = jsonDictionary[@"displayName"];
-    }
-    else
-    {
-        displayName = @"";
-    }
-
-    NSString *givenName;
-
-    if(jsonDictionary[@"givenName"] && jsonDictionary[@"givenName"] != [NSNull null])
-    {
-        givenName = jsonDictionary[@"givenName"];
-    }
-    else
-    {
-        givenName = @"";
-    }
-
-    NSString *surname;
-
-    if(jsonDictionary[@"surname"] && jsonDictionary[@"surname"] != [NSNull null])
-    {
-        surname = jsonDictionary[@"surname"];
-    }
-    else
-    {
-        surname = @"";
-    }
-
-    NSString *city;
-
-    if(jsonDictionary[@"city"] && jsonDictionary[@"city"] != [NSNull null])
-    {
-        city = jsonDictionary[@"city"];
-    }
-    else
-    {
-        city = @"";
-    }
-
-    NSString *department;
-
-    if(jsonDictionary[@"department"] && jsonDictionary[@"department"] != [NSNull null])
-    {
-        department = jsonDictionary[@"department"];
-    }
-    else
-    {
-        department = @"";
-    }
-
-    NSString *jobTitle;
-
-    if(jsonDictionary[@"jobTitle"] && jsonDictionary[@"jobTitle"] != [NSNull null])
-    {
-        jobTitle = jsonDictionary[@"jobTitle"];
-    }
-    else
-    {
-        jobTitle = @"";
-    }
-
-    NSString *mobile;
-
-    if(jsonDictionary[@"mobile"] && jsonDictionary[@"mobile"] != [NSNull null])
-    {
-        mobile = jsonDictionary[@"mobile"];
-    }
-    else
-    {
-        mobile = @"";
-    }
-
-    NSString *phone;
-
-    if(jsonDictionary[@"telephoneNumber"] && jsonDictionary[@"telephoneNumber"] != [NSNull null])
-    {
-        phone = jsonDictionary[@"telephoneNumber"];
-    }
-    else
-    {
-        phone = @"";
-    }
-
-    NSString *email;
-
-    if(jsonDictionary[@"mail"] && jsonDictionary[@"mail"] != [NSNull null])
-    {
-        email = jsonDictionary[@"mail"];
-    }
-    else
-    {
-        email = @"";
-    }
+    NSString *objectId =    [self stringForKey:@"objectId" inDictionary:jsonDictionary];
+    NSString *displayName = [self stringForKey:@"displayName" inDictionary:jsonDictionary];
+    NSString *givenName =   [self stringForKey:@"givenName" inDictionary:jsonDictionary];
+    NSString *surname =     [self stringForKey:@"surname" inDictionary:jsonDictionary];
+    NSString *city =        [self stringForKey:@"city" inDictionary:jsonDictionary];
+    NSString *department =  [self stringForKey:@"department" inDictionary:jsonDictionary];
+    NSString *jobTitle =    [self stringForKey:@"jobTitle" inDictionary:jsonDictionary];
+    NSString *mobile =      [self stringForKey:@"mobile" inDictionary:jsonDictionary];
+    NSString *phone =       [self stringForKey:@"telephoneNumber" inDictionary:jsonDictionary];
+    NSString *email =       [self stringForKey:@"mail" inDictionary:jsonDictionary];
 
     O365User *user = [[O365User alloc] initWithId:objectId
                                       displayName:displayName
@@ -284,6 +185,18 @@ static NSString * const RESOURCE_ID_STRING = @"https://graph.microsoft.com/";
                                             email:email];
 
     return user;
+}
+
+// TODO: Make this a category on NSDictionary
+- (NSString *)stringForKey:(NSString *)key inDictionary:(NSDictionary *)dictionary
+{
+    NSString *value = @"";
+
+    if(dictionary[key] && dictionary[key] != [NSNull null]) {
+        value = dictionary[key];
+    }
+
+    return value;
 }
 
 - (void)fetchPhotoWithUserId:(NSString *)userObjectID
