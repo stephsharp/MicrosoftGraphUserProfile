@@ -59,56 +59,27 @@ static NSString * const RESOURCE_ID_STRING = @"https://graph.microsoft.com/";
 //Fetches all the users from the Active Directory
 - (void)fetchAllUsersWithRequestURL:(NSString *)urlString completionHandler:(void (^)(NSArray *allUsers, NSString *nextPage, NSError *error))completionHandler
 {
-    [self.authenticationManager acquireAuthTokenWithResourceId:_resourceID
-                                             completionHandler:^(ADAuthenticationResult *result, NSError *error) {
-                                                 if (error) {
-                                                     completionHandler(nil, nil, error);
-                                                     return;
-                                                 }
+    NSString *requestURLString = urlString ?: [NSString stringWithFormat:@"%@%@", _baseURL, @"users?$orderby=displayName"];
 
-                                                 NSString *accessToken = result.tokenCacheStoreItem.accessToken;
+    NSMutableURLRequest *mutableRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:requestURLString]];
+    [mutableRequest setValue:@"application/json;odata.metadata=minimal;odata.streaming=true" forHTTPHeaderField:@"accept"];
 
-                                                 NSURLSessionConfiguration *config = [NSURLSessionConfiguration defaultSessionConfiguration];
-                                                 NSURLSession *delegateFreeSession = [NSURLSession sessionWithConfiguration:
-                                                                                      config delegate: nil delegateQueue: [NSOperationQueue mainQueue]];
+    [self fetchDataWithRequest:[mutableRequest copy] completionHandler:^(NSData *data, NSError *error) {
+        NSDictionary *jsonPayload = [NSJSONSerialization JSONObjectWithData:data
+                                                                    options:0
+                                                                      error:NULL];
+        jsonPayload = [self sanitizeKeysInDictionary:jsonPayload];
 
-                                                 NSString *requestURL = urlString ?: [NSString stringWithFormat:@"%@%@", _baseURL, @"users?$orderby=displayName"];
+        NSMutableArray *users = [[NSMutableArray alloc] init];
 
-                                                 NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL: [NSURL URLWithString:requestURL]];
+        for (NSDictionary *userData in jsonPayload[@"value"]) {
+            O365User *user = [O365UnifiedAPIClient userFromJSONDictionary:userData];
+            [users addObject:user];
+        }
 
-                                                 NSString *authorization = [NSString stringWithFormat:@"Bearer %@", accessToken];
-                                                 NSLog([NSString stringWithFormat:@"AUTHTOKEN: \"%@\"", authorization]);
-
-                                                 [theRequest setValue:authorization forHTTPHeaderField:@"Authorization"];
-                                                 [theRequest setValue:@"application/json;odata.metadata=minimal;odata.streaming=true" forHTTPHeaderField:@"accept"];
-
-                                                 [[delegateFreeSession dataTaskWithRequest:theRequest
-                                                                         completionHandler:^(NSData *data, NSURLResponse *response,
-                                                                                             NSError *error) {
-                                                                             NSLog(@"Got response %@ with error %@.\n", response,
-                                                                                   error);
-                                                                             NSLog(@"DATA:\n%@\nEND DATA\n",
-                                                                                   [[NSString alloc] initWithData: data
-                                                                                                         encoding: NSUTF8StringEncoding]);
-
-                                                                             NSDictionary *jsonPayload = [NSJSONSerialization JSONObjectWithData:data
-                                                                                                                                         options:0
-                                                                                                                                           error:NULL];
-                                                                             jsonPayload = [self sanitizeKeysInDictionary:jsonPayload];
-
-                                                                             NSMutableArray *users = [[NSMutableArray alloc] init];
-
-                                                                             for (NSDictionary *userData in jsonPayload[@"value"]) {
-                                                                                 O365User *user = [O365UnifiedAPIClient userFromJSONDictionary:userData];
-                                                                                 [users addObject:user];
-                                                                             }
-
-                                                                             NSString *nextPage = jsonPayload[@"nextLink"];
-                                                                             completionHandler(users, nextPage, error);
-
-                                                                         }] resume];
-                                             }];
-    
+        NSString *nextPage = jsonPayload[@"nextLink"];
+        completionHandler(users, nextPage, error);
+    }];
 }
 
 //Fetches the basic user information from Active Directory
