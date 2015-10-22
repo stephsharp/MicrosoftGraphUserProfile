@@ -10,8 +10,9 @@
 
 //Note: Usually the tenant string looks like x.onmicrosoft.com/
 //DO NOT FORGET END THE STRING WITH A '/'
-- (instancetype)initWithTenant:(NSString *)tenant authenticationManager:(O365AuthenticationManager *)authenticationManager
- NS_DESIGNATED_INITIALIZER;
+- (instancetype)initWithTenant:(NSString *)tenant
+         authenticationManager:(O365AuthenticationManager *)authenticationManager NS_DESIGNATED_INITIALIZER;
+- (instancetype)initWithPlist:(NSString *)plist;
 - (instancetype)init NS_UNAVAILABLE;
 
 - (void)fetchAllUsersWithRequestURL:(NSString *)urlString
@@ -26,7 +27,7 @@
                         size:(NSUInteger)size
            completionHandler:(void (^)(UIImage *image, NSError *error))completionHandler;
 
-+ (NSURL *)urlForPhotoWithUserId:(NSString *)userObjectID size:(NSUInteger)size;
+- (NSURL *)urlForPhotoWithUserId:(NSString *)userObjectID size:(NSUInteger)size;
 
 @end
 

@@ -31,6 +31,24 @@ static NSString * const RESOURCE_ID_STRING = @"https://graph.microsoft.com/";
     return self;
 }
 
+- (instancetype)initWithPlist:(NSString *)plist
+{
+    NSString *path = [[NSBundle mainBundle] pathForResource:plist ofType:@"plist"];
+    NSDictionary *settings;
+
+    if (path) {
+        settings = [[NSDictionary alloc] initWithContentsOfFile:path];
+    } else {
+        @throw([[NSException alloc] initWithName:@"NO_SETTINGS_PLIST"
+                                          reason:[NSString stringWithFormat:@"%@.plist not found in bundle.", plist]
+                                        userInfo:[[NSDictionary alloc] init]]);
+    }
+
+    O365AuthenticationManager *authenticationManager = [[O365AuthenticationManager alloc] initWithPlist:plist];
+
+    return [self initWithTenant:[settings valueForKey:@"Tenant"] authenticationManager:authenticationManager];
+}
+
 - (instancetype)init
 {
     [self doesNotRecognizeSelector:_cmd];
@@ -444,12 +462,12 @@ static NSString * const RESOURCE_ID_STRING = @"https://graph.microsoft.com/";
 
 }
 
-+ (NSURL *)urlForPhotoWithUserId:(NSString *)userObjectID size:(NSUInteger)size
+- (NSURL *)urlForPhotoWithUserId:(NSString *)userObjectID size:(NSUInteger)size
 {
     NSString *sizeString = size > 0 ? [NSString stringWithFormat:@"%luX%lu/", size, (unsigned long)size] : @"";
     NSString *userPhotoString = size > 0 ? @"/userphotos/" : @"/userphoto/";
 
-    NSString *requestURL = [NSString stringWithFormat:@"%@%@%@%@%@%@", BASE_URL_STRING, @"users/", userObjectID, userPhotoString, sizeString, @"$value"];
+    NSString *requestURL = [NSString stringWithFormat:@"%@%@%@%@%@%@", _baseURL, @"users/", userObjectID, userPhotoString, sizeString, @"$value"];
 
     return [NSURL URLWithString:requestURL];
 }

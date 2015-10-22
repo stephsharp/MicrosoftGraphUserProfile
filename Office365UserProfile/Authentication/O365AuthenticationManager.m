@@ -33,6 +33,24 @@
     return self;
 }
 
+- (instancetype)initWithPlist:(NSString *)plist
+{
+    NSString *path = [[NSBundle mainBundle] pathForResource:plist ofType:@"plist"];
+    NSDictionary *settings;
+
+    if (path) {
+        settings = [[NSDictionary alloc] initWithContentsOfFile:path];
+    } else {
+        @throw([[NSException alloc] initWithName:@"NO_SETTINGS_PLIST"
+                                          reason:[NSString stringWithFormat:@"%@.plist not found in bundle.", plist]
+                                        userInfo:[[NSDictionary alloc] init]]);
+    }
+
+    return [self initWithRedirectURL:[settings valueForKey:@"RedirectURL"]
+                            clientID:[settings valueForKey:@"ClientID"]
+                           authority:[settings valueForKey:@"Authority"]];
+}
+
 - (instancetype)init
 {
     [self doesNotRecognizeSelector:_cmd];

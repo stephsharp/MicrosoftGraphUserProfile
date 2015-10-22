@@ -10,6 +10,7 @@
 - (instancetype)initWithRedirectURL:(NSString *)redirectURL
                            clientID:(NSString *)clientID
                           authority:(NSString *)authority NS_DESIGNATED_INITIALIZER;
+- (instancetype)initWithPlist:(NSString *)plist;
 - (instancetype)init NS_UNAVAILABLE;
 
 // Call to get an access token.
