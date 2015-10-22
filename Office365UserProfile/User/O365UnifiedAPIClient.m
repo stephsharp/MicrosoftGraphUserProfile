@@ -61,11 +61,19 @@ static NSString * const RESOURCE_ID_STRING = @"https://graph.microsoft.com/";
 #pragma mark - Public
 
 //Fetches all the users from the Active Directory
-- (void)fetchAllUsersWithRequestURL:(NSString *)urlString completionHandler:(void (^)(NSArray *allUsers, NSString *nextPage, NSError *error))completionHandler
+- (void)fetchAllUsersWithProgressHandler:(void (^)(NSArray *users, NSError *error))progressHandler
+                       completionHandler:(void (^)(NSArray *users, NSError *error))completionHandler
 {
-    NSString *requestURLString = urlString ?: [NSString stringWithFormat:@"%@%@", _baseURL, @"users?$orderby=displayName"];
+    NSString *requestURLString = [NSString stringWithFormat:@"%@%@", _baseURL, @"users?$orderby=displayName"];
 
-    NSMutableURLRequest *mutableRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:requestURLString]];
+    [self fetchAllUsersWithRequestURL:requestURLString progressHandler:progressHandler completionHandler:completionHandler];
+}
+
+- (void)fetchAllUsersWithRequestURL:(NSString *)urlString
+                    progressHandler:(void (^)(NSArray *users, NSError *error))progressHandler
+                  completionHandler:(void (^)(NSArray *users, NSError *error))completionHandler
+{
+    NSMutableURLRequest *mutableRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:urlString]];
     [mutableRequest setValue:@"application/json;odata.metadata=minimal;odata.streaming=true" forHTTPHeaderField:@"accept"];
 
     [self fetchDataWithRequest:[mutableRequest copy] completionHandler:^(NSData *data, NSError *error) {
@@ -81,8 +89,15 @@ static NSString * const RESOURCE_ID_STRING = @"https://graph.microsoft.com/";
             [users addObject:user];
         }
 
-        NSString *nextPage = jsonPayload[@"nextLink"];
-        completionHandler(users, nextPage, error);
+        NSString *nextPage = [jsonPayload stringForKey:@"nextLink"];
+
+        if (nextPage.length > 0) {
+            progressHandler(users, error);
+            [self fetchAllUsersWithRequestURL:nextPage progressHandler:progressHandler completionHandler:completionHandler];
+        }
+        else {
+            completionHandler(users, error);
+        }
     }];
 }
 

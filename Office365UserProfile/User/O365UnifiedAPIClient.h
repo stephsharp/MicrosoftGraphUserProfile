@@ -15,8 +15,8 @@
 - (instancetype)initWithPlist:(NSString *)plist;
 - (instancetype)init NS_UNAVAILABLE;
 
-- (void)fetchAllUsersWithRequestURL:(NSString *)urlString
-                  completionHandler:(void (^)(NSArray *allUsers, NSString *nextPage, NSError *error))completionHandler;
+- (void)fetchAllUsersWithProgressHandler:(void (^)(NSArray *users, NSError *error))progressHandler
+                       completionHandler:(void (^)(NSArray *users, NSError *error))completionHandler;
 
 - (void)fetchUserWithId:(NSString *)userObjectID
       completionHandler:(void (^)(O365User *user, NSError *error))completionHandler;
