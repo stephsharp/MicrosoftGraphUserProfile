@@ -115,48 +115,51 @@ static NSString * const RESOURCE_ID_STRING = @"https://graph.microsoft.com/";
 - (void)fetchUserWithId:(NSString *)userObjectID
       completionHandler:(void (^)(O365User *, NSError *))completionHandler
 {
-    [self.authenticationManager acquireAuthTokenWithResourceId:_resourceID
+    NSURL *requestURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@", _baseURL, @"users/", userObjectID]];
+
+    NSMutableURLRequest *mutableRequest = [NSMutableURLRequest requestWithURL:requestURL];
+    [mutableRequest setValue:@"application/json;odata.metadata=minimal;odata.streaming=true" forHTTPHeaderField:@"accept"];
+
+    [self fetchDataWithRequest:[mutableRequest copy] completionHandler:^(NSData *data, NSError *error) {
+        NSDictionary *jsonPayload = [NSJSONSerialization JSONObjectWithData:data
+                                                                    options:0
+                                                                      error:NULL];
+
+        O365User *user = [O365UnifiedAPIClient userFromJSONDictionary:jsonPayload];
+        completionHandler(user, error);
+    }];
+}
+
+- (void)fetchDataWithRequest:(NSURLRequest *)request
+           completionHandler:(void (^)(NSData *data, NSError *error))completionHandler
+{
+    [self.authenticationManager acquireAuthTokenWithResourceId:self.resourceID
                                              completionHandler:^(ADAuthenticationResult *result, NSError *error) {
                                                  if (error) {
-                                                     completionHandler(nil,error);
+                                                     completionHandler(nil, error);
                                                      return;
                                                  }
 
                                                  NSString *accessToken = result.tokenCacheStoreItem.accessToken;
 
                                                  NSURLSessionConfiguration *config = [NSURLSessionConfiguration defaultSessionConfiguration];
-                                                 NSURLSession *delegateFreeSession = [NSURLSession sessionWithConfiguration:
-                                                                                      config delegate: nil delegateQueue: [NSOperationQueue mainQueue]];
+                                                 NSURLSession *delegateFreeSession = [NSURLSession sessionWithConfiguration:config
+                                                                                                                   delegate:nil
+                                                                                                              delegateQueue:[NSOperationQueue mainQueue]];
 
-                                                 NSString *requestURL = [NSString stringWithFormat:@"%@%@%@", _baseURL, @"users/", userObjectID];
-
-
-                                                 NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL: [NSURL URLWithString:requestURL]];
+                                                 NSMutableURLRequest *mutableRequest = [request mutableCopy];
 
                                                  NSString *authorization = [NSString stringWithFormat:@"Bearer %@", accessToken];
+                                                 [mutableRequest setValue:authorization forHTTPHeaderField:@"Authorization"];
 
-                                                 [theRequest setValue:authorization forHTTPHeaderField:@"Authorization"];
-
-                                                 [theRequest setValue:@"application/json;odata.metadata=minimal;odata.streaming=true" forHTTPHeaderField:@"accept"];
-
-
-                                                 [[delegateFreeSession dataTaskWithRequest:theRequest
-                                                                         completionHandler:^(NSData *data, NSURLResponse *response,
-                                                                                             NSError *error) {
-                                                                             NSLog(@"Got response %@ with error %@.\n", response,
-                                                                                   error);
+                                                 [[delegateFreeSession dataTaskWithRequest:mutableRequest
+                                                                         completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+                                                                             NSLog(@"Got response %@ with error %@.\n", response, error);
                                                                              NSLog(@"DATA:\n%@\nEND DATA\n",
-                                                                                   [[NSString alloc] initWithData: data
-                                                                                                         encoding: NSUTF8StringEncoding]);
+                                                                                   [[NSString alloc] initWithData:data
+                                                                                                         encoding:NSUTF8StringEncoding]);
 
-
-                                                                             NSDictionary *jsonPayload = [NSJSONSerialization JSONObjectWithData:data
-                                                                                                                                         options:0
-                                                                                                                                           error:NULL];
-
-                                                                             O365User *user = [O365UnifiedAPIClient userFromJSONDictionary:jsonPayload];
-                                                                             
-                                                                             completionHandler(user, error);
+                                                                             completionHandler(data, error);
                                                                          }] resume];
                                              }];
 }
@@ -179,45 +182,13 @@ static NSString * const RESOURCE_ID_STRING = @"https://graph.microsoft.com/";
                         size:(NSUInteger)size
            completionHandler:(void (^)(UIImage *image, NSError *error))completionHandler
 {
-    [self.authenticationManager acquireAuthTokenWithResourceId:_resourceID
-                                        completionHandler:^(ADAuthenticationResult *result, NSError *error) {
-                                            if (error) {
-                                                completionHandler(nil,error);
-                                                return;
-                                            }
+    NSURL *requestURL = [self urlForPhotoWithUserId:userObjectID size:size];
+    NSURLRequest *request = [NSURLRequest requestWithURL:requestURL];
 
-                                            NSString *accessToken = result.tokenCacheStoreItem.accessToken;
-
-                                            NSURLSessionConfiguration *config = [NSURLSessionConfiguration defaultSessionConfiguration];
-                                            NSURLSession *delegateFreeSession = [NSURLSession sessionWithConfiguration:config
-                                                                                                              delegate:nil
-                                                                                                         delegateQueue:[NSOperationQueue mainQueue]];
-
-                                            NSURL *requestURL = [self urlForPhotoWithUserId:userObjectID size:size];
-
-                                            NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL:requestURL];
-
-                                            NSString *authorization = [NSString stringWithFormat:@"Bearer %@", accessToken];
-                                            [theRequest setValue:authorization forHTTPHeaderField:@"Authorization"];
-
-                                            [[delegateFreeSession dataTaskWithRequest:theRequest
-                                                                    completionHandler:^(NSData *data, NSURLResponse *response,
-                                                                                        NSError *error) {
-
-                                                                        NSLog(@"Got response %@ with error %@.\n", response,
-                                                                              error);
-                                                                        NSLog(@"DATA:\n%@\nEND DATA\n",
-                                                                              [[NSString alloc] initWithData: data
-                                                                                                    encoding: NSUTF8StringEncoding]);
-
-
-                                                                        UIImage *image = [UIImage imageWithData:data];
-
-                                                                        completionHandler(image, nil);
-                                                                    }] resume];
-
-                                        }];
-
+    [self fetchDataWithRequest:request completionHandler:^(NSData *data, NSError *error) {
+        UIImage *image = [UIImage imageWithData:data];
+        completionHandler(image, nil);
+    }];
 }
 
 - (NSURL *)urlForPhotoWithUserId:(NSString *)userObjectID size:(NSUInteger)size
