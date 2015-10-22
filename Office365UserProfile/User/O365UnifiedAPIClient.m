@@ -432,12 +432,9 @@ static NSString * const RESOURCE_ID_STRING = @"https://graph.microsoft.com/";
                                                                                                               delegate:nil
                                                                                                          delegateQueue:[NSOperationQueue mainQueue]];
 
-                                            NSString *sizeString = size > 0 ? [NSString stringWithFormat:@"%luX%lu/", size, (unsigned long)size] : @"";
-                                            NSString *userPhotoString = size > 0 ? @"/userphotos/" : @"/userphoto/";
+                                            NSURL *requestURL = [self urlForPhotoWithUserId:userObjectID size:size];
 
-                                            NSString *requestURL = [NSString stringWithFormat:@"%@%@%@%@%@%@", _baseURL, @"users/", userObjectID, userPhotoString, sizeString, @"$value"];
-
-                                            NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL: [NSURL URLWithString:requestURL]];
+                                            NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL:requestURL];
 
                                             NSString *authorization = [NSString stringWithFormat:@"Bearer %@", accessToken];
                                             [theRequest setValue:authorization forHTTPHeaderField:@"Authorization"];
@@ -464,8 +461,13 @@ static NSString * const RESOURCE_ID_STRING = @"https://graph.microsoft.com/";
 
 - (NSURL *)urlForPhotoWithUserId:(NSString *)userObjectID size:(NSUInteger)size
 {
-    NSString *sizeString = size > 0 ? [NSString stringWithFormat:@"%luX%lu/", size, (unsigned long)size] : @"";
-    NSString *userPhotoString = size > 0 ? @"/userphotos/" : @"/userphoto/";
+    NSString *sizeString = @"";
+    NSString *userPhotoString = @"/userphoto/";
+
+    if (size > 0) {
+        sizeString = [NSString stringWithFormat:@"%luX%lu/", size, (unsigned long)size];
+        userPhotoString = @"/userphotos/";
+    }
 
     NSString *requestURL = [NSString stringWithFormat:@"%@%@%@%@%@%@", _baseURL, @"users/", userObjectID, userPhotoString, sizeString, @"$value"];
 
