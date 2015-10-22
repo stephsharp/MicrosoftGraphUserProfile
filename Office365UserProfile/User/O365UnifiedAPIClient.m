@@ -59,183 +59,55 @@ static NSString * const RESOURCE_ID_STRING = @"https://graph.microsoft.com/";
 - (void)fetchAllUsersWithRequestURL:(NSString *)urlString completionHandler:(void (^)(NSArray *allUsers, NSString *nextPage, NSError *error))completionHandler
 {
     [self.authenticationManager acquireAuthTokenWithResourceId:_resourceID
-                                        completionHandler:^(ADAuthenticationResult *result, NSError *error) {
-                                            if (error) {
-                                                completionHandler(nil, nil, error);
-                                                return;
-                                            }
-                                            
-                                            NSString *accessToken = result.tokenCacheStoreItem.accessToken;
-                                            
-                                            NSURLSessionConfiguration *config = [NSURLSessionConfiguration defaultSessionConfiguration];
-                                            NSURLSession *delegateFreeSession = [NSURLSession sessionWithConfiguration:
-                                                                                 config delegate: nil delegateQueue: [NSOperationQueue mainQueue]];
-                                            
-                                            NSString *requestURL = urlString ?: [NSString stringWithFormat:@"%@%@", _baseURL, @"users?$orderby=displayName"];
-                                            
-                                            NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL: [NSURL URLWithString:requestURL]];
-                                            
-                                            
-                                            NSString *authorization = [NSString stringWithFormat:@"Bearer %@", accessToken];
+                                             completionHandler:^(ADAuthenticationResult *result, NSError *error) {
+                                                 if (error) {
+                                                     completionHandler(nil, nil, error);
+                                                     return;
+                                                 }
 
-                                            NSLog([NSString stringWithFormat:@"AUTHTOKEN: \"%@\"", authorization]);
+                                                 NSString *accessToken = result.tokenCacheStoreItem.accessToken;
 
-                                            
-                                            [theRequest setValue:authorization forHTTPHeaderField:@"Authorization"];
-                                            
-                                            [theRequest setValue:@"application/json;odata.metadata=minimal;odata.streaming=true" forHTTPHeaderField:@"accept"];
-                                            
-                                            
-                                            [[delegateFreeSession dataTaskWithRequest:theRequest
-                                                                    completionHandler:^(NSData *data, NSURLResponse *response,
-                                                                                        NSError *error) {
-                                                                        NSLog(@"Got response %@ with error %@.\n", response,
-                                                                              error);
-                                                                        NSLog(@"DATA:\n%@\nEND DATA\n",
-                                                                              [[NSString alloc] initWithData: data
-                                                                                                    encoding: NSUTF8StringEncoding]);
-                                                                        
-                                                                        
-                                                                        NSDictionary *jsonPayload = [NSJSONSerialization JSONObjectWithData:data
-                                                                                                                                    options:0
-                                                                                                                                      error:NULL];
-                                                                        jsonPayload = [self sanitizeKeysInDictionary:jsonPayload];
+                                                 NSURLSessionConfiguration *config = [NSURLSessionConfiguration defaultSessionConfiguration];
+                                                 NSURLSession *delegateFreeSession = [NSURLSession sessionWithConfiguration:
+                                                                                      config delegate: nil delegateQueue: [NSOperationQueue mainQueue]];
 
-                                                                        NSMutableArray *users = [[NSMutableArray alloc] init];
-                                                                        
-                                                                        for (NSDictionary *userData in jsonPayload[@"value"]) {
-                                                                            
-                                                                            NSString *objectId;
+                                                 NSString *requestURL = urlString ?: [NSString stringWithFormat:@"%@%@", _baseURL, @"users?$orderby=displayName"];
 
-                                                                            if(userData[@"objectId"])
-                                                                            {
-                                                                                objectId = userData[@"objectId"];
-                                                                            }
-                                                                            else
-                                                                            {
-                                                                                objectId = @"";
-                                                                            }
+                                                 NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL: [NSURL URLWithString:requestURL]];
 
-                                                                            NSString *displayName;
+                                                 NSString *authorization = [NSString stringWithFormat:@"Bearer %@", accessToken];
+                                                 NSLog([NSString stringWithFormat:@"AUTHTOKEN: \"%@\"", authorization]);
 
-                                                                            if(userData[@"displayName"] && userData[@"displayName"] != [NSNull null])
-                                                                            {
-                                                                                displayName = userData[@"displayName"];
-                                                                            }
-                                                                            else
-                                                                            {
-                                                                                displayName = @"";
-                                                                            }
+                                                 [theRequest setValue:authorization forHTTPHeaderField:@"Authorization"];
+                                                 [theRequest setValue:@"application/json;odata.metadata=minimal;odata.streaming=true" forHTTPHeaderField:@"accept"];
 
-                                                                            NSString *givenName;
+                                                 [[delegateFreeSession dataTaskWithRequest:theRequest
+                                                                         completionHandler:^(NSData *data, NSURLResponse *response,
+                                                                                             NSError *error) {
+                                                                             NSLog(@"Got response %@ with error %@.\n", response,
+                                                                                   error);
+                                                                             NSLog(@"DATA:\n%@\nEND DATA\n",
+                                                                                   [[NSString alloc] initWithData: data
+                                                                                                         encoding: NSUTF8StringEncoding]);
 
-                                                                            if(userData[@"givenName"] && userData[@"givenName"] != [NSNull null])
-                                                                            {
-                                                                                givenName = userData[@"givenName"];
-                                                                            }
-                                                                            else
-                                                                            {
-                                                                                givenName = @"";
-                                                                            }
+                                                                             NSDictionary *jsonPayload = [NSJSONSerialization JSONObjectWithData:data
+                                                                                                                                         options:0
+                                                                                                                                           error:NULL];
+                                                                             jsonPayload = [self sanitizeKeysInDictionary:jsonPayload];
 
-                                                                            NSString *surname;
+                                                                             NSMutableArray *users = [[NSMutableArray alloc] init];
 
-                                                                            if(userData[@"surname"] && userData[@"surname"] != [NSNull null])
-                                                                            {
-                                                                                surname = userData[@"surname"];
-                                                                            }
-                                                                            else
-                                                                            {
-                                                                                surname = @"";
-                                                                            }
+                                                                             for (NSDictionary *userData in jsonPayload[@"value"]) {
+                                                                                 O365User *user = [self userFromJSONDictionary:userData];
+                                                                                 [users addObject:user];
+                                                                             }
 
-                                                                            NSString *city;
+                                                                             NSString *nextPage = jsonPayload[@"nextLink"];
+                                                                             completionHandler(users, nextPage, error);
 
-                                                                            if(userData[@"city"] && userData[@"city"] != [NSNull null])
-                                                                            {
-                                                                                city = userData[@"city"];
-                                                                            }
-                                                                            else
-                                                                            {
-                                                                                city = @"";
-                                                                            }
-
-                                                                            NSString *department;
-
-                                                                            if(userData[@"department"] && userData[@"department"] != [NSNull null])
-                                                                            {
-                                                                                department = userData[@"department"];
-                                                                            }
-                                                                            else
-                                                                            {
-                                                                                department = @"";
-                                                                            }
-
-                                                                            NSString *jobTitle;
-
-                                                                            if(userData[@"jobTitle"] && userData[@"jobTitle"] != [NSNull null])
-                                                                            {
-                                                                                jobTitle = userData[@"jobTitle"];
-                                                                            }
-                                                                            else
-                                                                            {
-                                                                                jobTitle = @"";
-                                                                            }
-
-                                                                            NSString *mobile;
-
-                                                                            if(userData[@"mobile"] && userData[@"mobile"] != [NSNull null])
-                                                                            {
-                                                                                mobile = userData[@"mobile"];
-                                                                            }
-                                                                            else
-                                                                            {
-                                                                                mobile = @"";
-                                                                            }
-
-                                                                            NSString *phone;
-
-                                                                            if(userData[@"telephoneNumber"] && userData[@"telephoneNumber"] != [NSNull null])
-                                                                            {
-                                                                                phone = userData[@"telephoneNumber"];
-                                                                            }
-                                                                            else
-                                                                            {
-                                                                                phone = @"";
-                                                                            }
-
-                                                                            NSString *email;
-
-                                                                            if(userData[@"mail"] && userData[@"mail"] != [NSNull null])
-                                                                            {
-                                                                                email = userData[@"mail"];
-                                                                            }
-                                                                            else
-                                                                            {
-                                                                                email = @"";
-                                                                            }
-
-                                                                            O365User *user = [[O365User alloc] initWithId:objectId
-                                                                                                              displayName:displayName
-                                                                                                                givenName:givenName
-                                                                                                                  surname:surname
-                                                                                                                 jobTitle:jobTitle
-                                                                                                               department:department
-                                                                                                                     city:city
-                                                                                                                   mobile:mobile
-                                                                                                                    phone:phone
-                                                                                                                    email:email];
-                                                                            [users addObject:user];
-                                                                            
-                                                                        }
-                                                                        
-                                                                        NSString *nextPage = jsonPayload[@"nextLink"];
-                                                                        completionHandler(users, nextPage, error);
-
-                                                                    }] resume];
-                                            
-                                        }];
-  
+                                                                         }] resume];
+                                             }];
+    
 }
 
 //Fetches the basic user information from Active Directory
@@ -243,175 +115,175 @@ static NSString * const RESOURCE_ID_STRING = @"https://graph.microsoft.com/";
       completionHandler:(void (^)(O365User *, NSError *))completionHandler
 {
     [self.authenticationManager acquireAuthTokenWithResourceId:_resourceID
-                                        completionHandler:^(ADAuthenticationResult *result, NSError *error) {
-                                            if (error) {
-                                                completionHandler(nil,error);
-                                                return;
-                                            }
+                                             completionHandler:^(ADAuthenticationResult *result, NSError *error) {
+                                                 if (error) {
+                                                     completionHandler(nil,error);
+                                                     return;
+                                                 }
+
+                                                 NSString *accessToken = result.tokenCacheStoreItem.accessToken;
+
+                                                 NSURLSessionConfiguration *config = [NSURLSessionConfiguration defaultSessionConfiguration];
+                                                 NSURLSession *delegateFreeSession = [NSURLSession sessionWithConfiguration:
+                                                                                      config delegate: nil delegateQueue: [NSOperationQueue mainQueue]];
+
+                                                 NSString *requestURL = [NSString stringWithFormat:@"%@%@%@", _baseURL, @"users/", userObjectID];
 
 
-                                            NSString *accessToken = result.tokenCacheStoreItem.accessToken;
+                                                 NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL: [NSURL URLWithString:requestURL]];
 
-                                            NSURLSessionConfiguration *config = [NSURLSessionConfiguration defaultSessionConfiguration];
-                                            NSURLSession *delegateFreeSession = [NSURLSession sessionWithConfiguration:
-                                                                                 config delegate: nil delegateQueue: [NSOperationQueue mainQueue]];
-                                        
-                                            NSString *requestURL = [NSString stringWithFormat:@"%@%@%@", _baseURL, @"users/", userObjectID];
-                                            
-                                            
-                                            NSMutableURLRequest *theRequest = [NSMutableURLRequest requestWithURL: [NSURL URLWithString:requestURL]];
+                                                 NSString *authorization = [NSString stringWithFormat:@"Bearer %@", accessToken];
+
+                                                 [theRequest setValue:authorization forHTTPHeaderField:@"Authorization"];
+
+                                                 [theRequest setValue:@"application/json;odata.metadata=minimal;odata.streaming=true" forHTTPHeaderField:@"accept"];
 
 
-                                            NSString *authorization = [NSString stringWithFormat:@"Bearer %@", accessToken];
+                                                 [[delegateFreeSession dataTaskWithRequest:theRequest
+                                                                         completionHandler:^(NSData *data, NSURLResponse *response,
+                                                                                             NSError *error) {
+                                                                             NSLog(@"Got response %@ with error %@.\n", response,
+                                                                                   error);
+                                                                             NSLog(@"DATA:\n%@\nEND DATA\n",
+                                                                                   [[NSString alloc] initWithData: data
+                                                                                                         encoding: NSUTF8StringEncoding]);
 
 
-                                            [theRequest setValue:authorization forHTTPHeaderField:@"Authorization"];
+                                                                             NSDictionary *jsonPayload = [NSJSONSerialization JSONObjectWithData:data
+                                                                                                                                         options:0
+                                                                                                                                           error:NULL];
 
-                                            [theRequest setValue:@"application/json;odata.metadata=minimal;odata.streaming=true" forHTTPHeaderField:@"accept"];
+                                                                             O365User *user = [self userFromJSONDictionary:jsonPayload];
+                                                                             
+                                                                             completionHandler(user, error);
+                                                                         }] resume];
+                                             }];
+}
 
+- (O365User *)userFromJSONDictionary:(NSDictionary *)jsonDictionary
+{
+    NSString *objectId;
 
-                                            [[delegateFreeSession dataTaskWithRequest:theRequest
-                                                                    completionHandler:^(NSData *data, NSURLResponse *response,
-                                                                                        NSError *error) {
-                                                                        NSLog(@"Got response %@ with error %@.\n", response,
-                                                                              error);
-                                                                        NSLog(@"DATA:\n%@\nEND DATA\n",
-                                                                              [[NSString alloc] initWithData: data
-                                                                                                    encoding: NSUTF8StringEncoding]);
+    if(jsonDictionary[@"objectId"])
+    {
+        objectId = jsonDictionary[@"objectId"];
+    }
+    else
+    {
+        objectId = @"";
+    }
 
+    NSString *displayName;
 
-                                                                        NSDictionary *jsonPayload = [NSJSONSerialization JSONObjectWithData:data
-                                                                                                                                    options:0
-                                                                                                                                      error:NULL];
-                                                                        
-                                                                        NSString *objectId;
-                                                                        
-                                                                        if(jsonPayload[@"objectId"])
-                                                                        {
-                                                                            objectId = jsonPayload[@"objectId"];
-                                                                        }
-                                                                        else
-                                                                        {
-                                                                            objectId = @"";
-                                                                        }
-                                                                        
-                                                                        NSString *displayName;
-                                                                        
-                                                                        if(jsonPayload[@"displayName"] && jsonPayload[@"displayName"] != [NSNull null])
-                                                                        {
-                                                                            displayName = jsonPayload[@"displayName"];
-                                                                        }
-                                                                        else
-                                                                        {
-                                                                            displayName = @"";
-                                                                        }
+    if(jsonDictionary[@"displayName"] && jsonDictionary[@"displayName"] != [NSNull null])
+    {
+        displayName = jsonDictionary[@"displayName"];
+    }
+    else
+    {
+        displayName = @"";
+    }
 
-                                                                        NSString *givenName;
+    NSString *givenName;
 
-                                                                        if(jsonPayload[@"givenName"] && jsonPayload[@"givenName"] != [NSNull null])
-                                                                        {
-                                                                            givenName = jsonPayload[@"givenName"];
-                                                                        }
-                                                                        else
-                                                                        {
-                                                                            givenName = @"";
-                                                                        }
+    if(jsonDictionary[@"givenName"] && jsonDictionary[@"givenName"] != [NSNull null])
+    {
+        givenName = jsonDictionary[@"givenName"];
+    }
+    else
+    {
+        givenName = @"";
+    }
 
-                                                                        NSString *surname;
+    NSString *surname;
 
-                                                                        if(jsonPayload[@"surname"] && jsonPayload[@"surname"] != [NSNull null])
-                                                                        {
-                                                                            surname = jsonPayload[@"surname"];
-                                                                        }
-                                                                        else
-                                                                        {
-                                                                            surname = @"";
-                                                                        }
+    if(jsonDictionary[@"surname"] && jsonDictionary[@"surname"] != [NSNull null])
+    {
+        surname = jsonDictionary[@"surname"];
+    }
+    else
+    {
+        surname = @"";
+    }
 
-                                                                        NSString *city;
-                                                                        
-                                                                        if(jsonPayload[@"city"] && jsonPayload[@"city"] != [NSNull null])
-                                                                        {
-                                                                            city = jsonPayload[@"city"];
-                                                                        }
-                                                                        else
-                                                                        {
-                                                                            city = @"";
-                                                                        }
-                                                                        
-                                                                        NSString *department;
-                                                                        
-                                                                        if(jsonPayload[@"department"] && jsonPayload[@"department"] != [NSNull null])
-                                                                        {
-                                                                            department = jsonPayload[@"department"];
-                                                                        }
-                                                                        else
-                                                                        {
-                                                                            department = @"";
-                                                                        }
-                                                                        
-                                                                        NSString *jobTitle;
-                                                                        
-                                                                        if(jsonPayload[@"jobTitle"] && jsonPayload[@"jobTitle"] != [NSNull null])
-                                                                        {
-                                                                            jobTitle = jsonPayload[@"jobTitle"];
-                                                                        }
-                                                                        else
-                                                                        {
-                                                                            jobTitle = @"";
-                                                                        }
+    NSString *city;
 
-                                                                        NSString *mobile;
+    if(jsonDictionary[@"city"] && jsonDictionary[@"city"] != [NSNull null])
+    {
+        city = jsonDictionary[@"city"];
+    }
+    else
+    {
+        city = @"";
+    }
 
-                                                                        if(jsonPayload[@"mobile"] && jsonPayload[@"mobile"] != [NSNull null])
-                                                                        {
-                                                                            mobile = jsonPayload[@"mobile"];
-                                                                        }
-                                                                        else
-                                                                        {
-                                                                            mobile = @"";
-                                                                        }
+    NSString *department;
 
-                                                                        NSString *phone;
-                                                                        
-                                                                        if(jsonPayload[@"telephoneNumber"] && jsonPayload[@"telephoneNumber"] != [NSNull null])
-                                                                        {
-                                                                            phone = jsonPayload[@"telephoneNumber"];
-                                                                        }
-                                                                        else
-                                                                        {
-                                                                            phone = @"";
-                                                                        }
-                                                                        
-                                                                        NSString *email;
-                                                                        
-                                                                        if(jsonPayload[@"mail"] && jsonPayload[@"mail"] != [NSNull null])
-                                                                        {
-                                                                            email = jsonPayload[@"mail"];
-                                                                        }
-                                                                        else
-                                                                        {
-                                                                            email = @"";
-                                                                        }
-               
-                                                                        
+    if(jsonDictionary[@"department"] && jsonDictionary[@"department"] != [NSNull null])
+    {
+        department = jsonDictionary[@"department"];
+    }
+    else
+    {
+        department = @"";
+    }
 
-                                                                        O365User *user = [[O365User alloc] initWithId:objectId
-                                                                                                          displayName:displayName
-                                                                                                            givenName:givenName
-                                                                                                              surname:surname
-                                                                                                             jobTitle:jobTitle
-                                                                                                           department:department
-                                                                                                                 city:city
-                                                                                                               mobile:mobile
-                                                                                                                phone:phone
-                                                                                                                email:email];
+    NSString *jobTitle;
 
-                                                                        completionHandler(user, error);
-                                                                    }] resume];
+    if(jsonDictionary[@"jobTitle"] && jsonDictionary[@"jobTitle"] != [NSNull null])
+    {
+        jobTitle = jsonDictionary[@"jobTitle"];
+    }
+    else
+    {
+        jobTitle = @"";
+    }
 
-                                        }];
+    NSString *mobile;
 
+    if(jsonDictionary[@"mobile"] && jsonDictionary[@"mobile"] != [NSNull null])
+    {
+        mobile = jsonDictionary[@"mobile"];
+    }
+    else
+    {
+        mobile = @"";
+    }
+
+    NSString *phone;
+
+    if(jsonDictionary[@"telephoneNumber"] && jsonDictionary[@"telephoneNumber"] != [NSNull null])
+    {
+        phone = jsonDictionary[@"telephoneNumber"];
+    }
+    else
+    {
+        phone = @"";
+    }
+
+    NSString *email;
+
+    if(jsonDictionary[@"mail"] && jsonDictionary[@"mail"] != [NSNull null])
+    {
+        email = jsonDictionary[@"mail"];
+    }
+    else
+    {
+        email = @"";
+    }
+
+    O365User *user = [[O365User alloc] initWithId:objectId
+                                      displayName:displayName
+                                        givenName:givenName
+                                          surname:surname
+                                         jobTitle:jobTitle
+                                       department:department
+                                             city:city
+                                           mobile:mobile
+                                            phone:phone
+                                            email:email];
+
+    return user;
 }
 
 - (void)fetchPhotoWithUserId:(NSString *)userObjectID
@@ -448,13 +320,13 @@ static NSString * const RESOURCE_ID_STRING = @"https://graph.microsoft.com/";
                                                                         NSLog(@"DATA:\n%@\nEND DATA\n",
                                                                               [[NSString alloc] initWithData: data
                                                                                                     encoding: NSUTF8StringEncoding]);
-                                                                        
-                                                                        
+
+
                                                                         UIImage *image = [UIImage imageWithData:data];
 
                                                                         completionHandler(image, nil);
                                                                     }] resume];
-                                            
+
                                         }];
 
 }
