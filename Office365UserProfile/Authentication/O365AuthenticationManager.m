@@ -77,18 +77,9 @@
                                    redirectUri:self.redirectURL
                                completionBlock:^(ADAuthenticationResult *result) {
                                    if (AD_SUCCEEDED != result.status) {
-                                       
-                                       NSMutableDictionary *errorDetail = [NSMutableDictionary dictionary];
-                                       [errorDetail setValue:@"Failed to acquire a token" forKey:NSLocalizedDescriptionKey];
-                                       
-                                       //let's pick a unique error code of 100
-                                       NSError *error = [NSError errorWithDomain:@"O365-iOS-Profile"
-                                                                            code:100 userInfo:errorDetail];
-                                
-                                       completionBlock(nil, error);
+                                       completionBlock(nil, result.error);
                                    }
                                    else {
-                                       
                                        // Saving the logged in user's userId.
                                        NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
                                        [userDefaults setObject:result.tokenCacheStoreItem.userInformation.userId
@@ -98,7 +89,6 @@
                                        completionBlock(result, nil);
                                    }
                                }];
-    
 }
 
 @end
