@@ -59,6 +59,11 @@ static NSString * const RESOURCE_ID_STRING = @"https://graph.microsoft.com/";
     [mutableRequest setValue:@"application/json;odata.metadata=minimal;odata.streaming=true" forHTTPHeaderField:@"accept"];
 
     [self fetchDataWithRequest:[mutableRequest copy] completionHandler:^(NSData *data, NSError *error) {
+        if (error) {
+            completionHandler(nil, error);
+            return;
+        }
+
         NSDictionary *jsonPayload = [NSJSONSerialization JSONObjectWithData:data
                                                                     options:0
                                                                       error:NULL];
@@ -74,11 +79,11 @@ static NSString * const RESOURCE_ID_STRING = @"https://graph.microsoft.com/";
         NSString *nextPage = [jsonPayload stringForKey:@"nextLink"];
 
         if (nextPage.length > 0) {
-            progressHandler(users, error);
+            progressHandler(users, nil);
             [self fetchAllUsersWithRequestURL:nextPage progressHandler:progressHandler completionHandler:completionHandler];
         }
         else {
-            completionHandler(users, error);
+            completionHandler(users, nil);
         }
     }];
 }
@@ -93,12 +98,17 @@ static NSString * const RESOURCE_ID_STRING = @"https://graph.microsoft.com/";
     [mutableRequest setValue:@"application/json;odata.metadata=minimal;odata.streaming=true" forHTTPHeaderField:@"accept"];
 
     [self fetchDataWithRequest:[mutableRequest copy] completionHandler:^(NSData *data, NSError *error) {
+        if (error) {
+            completionHandler(nil, error);
+            return;
+        }
+
         NSDictionary *jsonPayload = [NSJSONSerialization JSONObjectWithData:data
                                                                     options:0
                                                                       error:NULL];
 
         O365User *user = [O365UnifiedAPIClient userFromJSONDictionary:jsonPayload];
-        completionHandler(user, error);
+        completionHandler(user, nil);
     }];
 }
 
