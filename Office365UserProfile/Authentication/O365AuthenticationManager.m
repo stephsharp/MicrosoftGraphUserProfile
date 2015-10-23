@@ -61,10 +61,17 @@
 - (void)acquireAuthTokenWithResourceId:(NSString *)resourceId
                      completionHandler:(void (^)(ADAuthenticationResult *result, NSError *error))completionBlock
 {
+    [self acquireAuthTokenWithResourceId:resourceId promptBehavior:AD_PROMPT_AUTO completionHandler:completionBlock];
+}
+
+- (void)acquireAuthTokenWithResourceId:(NSString *)resourceId
+                        promptBehavior:(ADPromptBehavior)promptBehavior
+                     completionHandler:(void (^)(ADAuthenticationResult *result, NSError *error))completionBlock
+{
     ADAuthenticationError *ADerror;
     self.authContext = [ADAuthenticationContext authenticationContextWithAuthority:self.authority
                                                                              error:&ADerror];
-    
+
     // The first time this application is run, the [ADAuthenticationContext acquireTokenWithResource]
     // manager will send a request to the AUTHORITY (see the const at the top of this file) which
     // will redirect you to a login page. You will provide your credentials and the response will
@@ -75,6 +82,9 @@
     [self.authContext acquireTokenWithResource:resourceId
                                       clientId:self.clientId
                                    redirectUri:self.redirectURL
+                                promptBehavior:promptBehavior
+                                        userId:nil
+                          extraQueryParameters:nil
                                completionBlock:^(ADAuthenticationResult *result) {
                                    if (AD_SUCCEEDED != result.status) {
                                        completionBlock(nil, result.error);
@@ -85,7 +95,7 @@
                                        [userDefaults setObject:result.tokenCacheStoreItem.userInformation.userId
                                                         forKey:@"LogInUser"];
                                        [userDefaults synchronize];
-        
+
                                        completionBlock(result, nil);
                                    }
                                }];
