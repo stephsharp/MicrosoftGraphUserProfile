@@ -140,13 +140,32 @@ static NSString * const RESOURCE_ID_STRING = @"https://graph.microsoft.com/";
                                                                              NSLog(@"DATA:\n%@\nEND DATA\n",
                                                                                    [[NSString alloc] initWithData:data
                                                                                                          encoding:NSUTF8StringEncoding]);
-                                                                             
+
                                                                              completionHandler(data, error);
                                                                          }] resume];
                                              }];
 }
 
 #pragma mark - Fetch photos
+
+- (void)fetchPhotoInfoWithUserId:(NSString *)userObjectID
+               completionHandler:(void (^)(NSArray *photos, NSError *error))completionHandler
+{
+    NSURL *requestURL = [self urlForPhotoInfoWithUserId:userObjectID];
+    NSURLRequest *request = [NSURLRequest requestWithURL:requestURL];
+
+    [self fetchDataWithRequest:request completionHandler:^(NSData *data, NSError *error) {
+        if (error) {
+            completionHandler(nil, error);
+            return;
+        }
+
+        NSDictionary *jsonPayload = [NSJSONSerialization JSONObjectWithData:data
+                                                                    options:0
+                                                                      error:NULL];
+        completionHandler(jsonPayload[@"value"], nil);
+    }];
+}
 
 - (void)fetchPhotoWithUserId:(NSString *)userObjectID
                         size:(NSUInteger)size
@@ -163,15 +182,25 @@ static NSString * const RESOURCE_ID_STRING = @"https://graph.microsoft.com/";
 
 - (NSURL *)urlForPhotoWithUserId:(NSString *)userObjectID size:(NSUInteger)size
 {
-    NSString *sizeString = @"";
-    NSString *userPhotoString = @"/userphoto/";
+    return [self userPhotoURLWithUserId:userObjectID size:size metadataOnly:NO];
+}
 
-    if (size > 0) {
-        sizeString = [NSString stringWithFormat:@"%luX%lu/", size, (unsigned long)size];
+- (NSURL *)urlForPhotoInfoWithUserId:(NSString *)userObjectID
+{
+    return [self userPhotoURLWithUserId:userObjectID size:0 metadataOnly:YES];
+}
+
+- (NSURL *)userPhotoURLWithUserId:(NSString *)userId size:(NSUInteger)size metadataOnly:(BOOL)metadata
+{
+    NSString *sizeString = (size > 0) ? [NSString stringWithFormat:@"%luX%lu/", (unsigned long)size, (unsigned long)size] : @"";
+    NSString *userPhotoString = @"/userphoto/";
+    NSString *valueString = metadata ? @"" : @"$value";
+
+    if (size > 0 || metadata) {
         userPhotoString = @"/userphotos/";
     }
 
-    NSString *requestURL = [NSString stringWithFormat:@"%@%@%@%@%@%@", _baseURL, @"users/", userObjectID, userPhotoString, sizeString, @"$value"];
+    NSString *requestURL = [NSString stringWithFormat:@"%@%@%@%@%@%@", _baseURL, @"users/", userId, userPhotoString, sizeString, valueString];
 
     return [NSURL URLWithString:requestURL];
 }
