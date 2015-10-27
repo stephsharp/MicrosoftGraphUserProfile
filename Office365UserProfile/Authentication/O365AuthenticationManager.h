@@ -5,7 +5,15 @@
 #import <Foundation/Foundation.h>
 #import <ADALiOS/ADAuthenticationContext.h>
 
+@protocol AuthenticationResultHandler
+
+- (void)handleAuthenticationResultWithCurrentUserId:(NSString *)userId token:(NSString *)token;
+
+@end
+
 @interface O365AuthenticationManager : NSObject
+
+@property (nonatomic) id<AuthenticationResultHandler> authenticationResultHandler;
 
 - (instancetype)initWithRedirectURL:(NSString *)redirectURL
                            clientID:(NSString *)clientID
@@ -22,7 +30,6 @@
                      completionHandler:(void (^)(ADAuthenticationResult *result, NSError *error))completionBlock;
 
 @end
-
 
 // *********************************************************
 //

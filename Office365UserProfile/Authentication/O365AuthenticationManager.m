@@ -90,11 +90,10 @@
                                        completionBlock(nil, result.error);
                                    }
                                    else {
-                                       // Saving the logged in user's userId.
-                                       NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-                                       [userDefaults setObject:result.tokenCacheStoreItem.userInformation.userId
-                                                        forKey:@"LogInUser"];
-                                       [userDefaults synchronize];
+                                       NSString *currentUserId = result.tokenCacheStoreItem.userInformation.userId;
+                                       NSString *token =         result.tokenCacheStoreItem.accessToken;
+
+                                       [self.authenticationResultHandler handleAuthenticationResultWithCurrentUserId:currentUserId token:token];
 
                                        completionBlock(result, nil);
                                    }
