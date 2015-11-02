@@ -7,7 +7,6 @@ Pod::Spec.new do |s|
   s.platform     = :ios, '7.0'
   s.requires_arc = true
 
-  s.public_header_files = 'Office365UserProfile/**/*.h'
   s.source_files = 'Office365UserProfile/**/*'
   
   s.dependency 'ADALiOS', '~> 1.2.1'
