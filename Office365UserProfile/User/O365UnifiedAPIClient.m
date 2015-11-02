@@ -3,6 +3,7 @@
  */
 
 #import "O365UnifiedAPIClient.h"
+#import "NSDictionary+O365.h"
 
 //Standard URL strings needed for the unified endpoint
 static NSString * const BASE_URL_STRING = @"https://graph.microsoft.com/beta/";
@@ -98,7 +99,7 @@ static NSString * const RESOURCE_ID_STRING = @"https://graph.microsoft.com/";
                                                                              NSMutableArray *users = [[NSMutableArray alloc] init];
 
                                                                              for (NSDictionary *userData in jsonPayload[@"value"]) {
-                                                                                 O365User *user = [self userFromJSONDictionary:userData];
+                                                                                 O365User *user = [O365UnifiedAPIClient userFromJSONDictionary:userData];
                                                                                  [users addObject:user];
                                                                              }
 
@@ -153,50 +154,25 @@ static NSString * const RESOURCE_ID_STRING = @"https://graph.microsoft.com/";
                                                                                                                                          options:0
                                                                                                                                            error:NULL];
 
-                                                                             O365User *user = [self userFromJSONDictionary:jsonPayload];
+                                                                             O365User *user = [O365UnifiedAPIClient userFromJSONDictionary:jsonPayload];
                                                                              
                                                                              completionHandler(user, error);
                                                                          }] resume];
                                              }];
 }
 
-- (O365User *)userFromJSONDictionary:(NSDictionary *)jsonDictionary
++ (O365User *)userFromJSONDictionary:(NSDictionary *)jsonDictionary
 {
-    NSString *objectId =    [self stringForKey:@"objectId" inDictionary:jsonDictionary];
-    NSString *displayName = [self stringForKey:@"displayName" inDictionary:jsonDictionary];
-    NSString *givenName =   [self stringForKey:@"givenName" inDictionary:jsonDictionary];
-    NSString *surname =     [self stringForKey:@"surname" inDictionary:jsonDictionary];
-    NSString *city =        [self stringForKey:@"city" inDictionary:jsonDictionary];
-    NSString *department =  [self stringForKey:@"department" inDictionary:jsonDictionary];
-    NSString *jobTitle =    [self stringForKey:@"jobTitle" inDictionary:jsonDictionary];
-    NSString *mobile =      [self stringForKey:@"mobile" inDictionary:jsonDictionary];
-    NSString *phone =       [self stringForKey:@"telephoneNumber" inDictionary:jsonDictionary];
-    NSString *email =       [self stringForKey:@"mail" inDictionary:jsonDictionary];
-
-    O365User *user = [[O365User alloc] initWithId:objectId
-                                      displayName:displayName
-                                        givenName:givenName
-                                          surname:surname
-                                         jobTitle:jobTitle
-                                       department:department
-                                             city:city
-                                           mobile:mobile
-                                            phone:phone
-                                            email:email];
-
-    return user;
-}
-
-// TODO: Make this a category on NSDictionary
-- (NSString *)stringForKey:(NSString *)key inDictionary:(NSDictionary *)dictionary
-{
-    NSString *value = @"";
-
-    if(dictionary[key] && dictionary[key] != [NSNull null]) {
-        value = dictionary[key];
-    }
-
-    return value;
+    return [[O365User alloc] initWithId:[jsonDictionary stringForKey:@"objectId"]
+                            displayName:[jsonDictionary stringForKey:@"displayName"]
+                              givenName:[jsonDictionary stringForKey:@"givenName"]
+                                surname:[jsonDictionary stringForKey:@"surname"]
+                               jobTitle:[jsonDictionary stringForKey:@"jobTitle"]
+                             department:[jsonDictionary stringForKey:@"department"]
+                                   city:[jsonDictionary stringForKey:@"city"]
+                                 mobile:[jsonDictionary stringForKey:@"mobile"]
+                                  phone:[jsonDictionary stringForKey:@"telephoneNumber"]
+                                  email:[jsonDictionary stringForKey:@"mail"]];
 }
 
 - (void)fetchPhotoWithUserId:(NSString *)userObjectID
