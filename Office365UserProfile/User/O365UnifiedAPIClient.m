@@ -193,11 +193,11 @@ static NSString * const RESOURCE_ID_STRING = @"https://graph.microsoft.com/";
 - (NSURL *)userPhotoURLWithUserId:(NSString *)userId size:(NSUInteger)size metadataOnly:(BOOL)metadata
 {
     NSString *sizeString = (size > 0) ? [NSString stringWithFormat:@"%luX%lu/", (unsigned long)size, (unsigned long)size] : @"";
-    NSString *userPhotoString = @"/userphoto/";
+    NSString *userPhotoString = @"/photo/";
     NSString *valueString = metadata ? @"" : @"$value";
 
     if (size > 0 || metadata) {
-        userPhotoString = @"/userphotos/";
+        userPhotoString = @"/photos/";
     }
 
     NSString *requestURL = [NSString stringWithFormat:@"%@%@%@%@%@%@", _baseURL, @"users/", userId, userPhotoString, sizeString, valueString];
