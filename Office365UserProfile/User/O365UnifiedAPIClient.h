@@ -17,17 +17,17 @@
 - (void)fetchAllUsersWithProgressHandler:(void (^)(NSArray *users, NSError *error))progressHandler
                        completionHandler:(void (^)(NSArray *users, NSError *error))completionHandler;
 
-- (void)fetchUserWithId:(NSString *)userObjectID
+- (void)fetchUserWithId:(NSString *)userId
       completionHandler:(void (^)(O365User *user, NSError *error))completionHandler;
 
-- (void)fetchPhotoInfoWithUserId:(NSString *)userObjectID
+- (void)fetchPhotoInfoWithUserId:(NSString *)userId
                completionHandler:(void (^)(NSArray *photos, NSError *error))completionHandler;
 
-- (void)fetchPhotoWithUserId:(NSString *)userObjectID
+- (void)fetchPhotoWithUserId:(NSString *)userId
                         size:(NSUInteger)size
            completionHandler:(void (^)(UIImage *image, NSError *error))completionHandler;
 
-- (NSURL *)urlForPhotoWithUserId:(NSString *)userObjectID size:(NSUInteger)size;
+- (NSURL *)urlForPhotoWithUserId:(NSString *)userId size:(NSUInteger)size;
 
 @end
 

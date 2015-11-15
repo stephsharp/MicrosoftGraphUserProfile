@@ -2,7 +2,7 @@
 
 @implementation O365User
 
-- (instancetype)initWithId:(NSString *)objectId
+- (instancetype)initWithId:(NSString *)userId
                displayName:(NSString *)displayName
                  givenName:(NSString *)givenName
                    surname:(NSString *)surname
@@ -16,7 +16,7 @@
     self = [super init];
 
     if (self) {
-        _objectId = objectId;
+        _userId = userId;
         _displayName = displayName;
         _givenName = givenName;
         _surname = surname;
@@ -31,11 +31,11 @@
     return self;
 }
 
-- (instancetype)initWithId:(NSString *)objectId
+- (instancetype)initWithId:(NSString *)userId
                displayName:(NSString *)displayName
                   jobTitle:(NSString *)jobTitle
 {
-    return [self initWithId:objectId
+    return [self initWithId:userId
                 displayName:displayName
                   givenName:nil
                     surname:nil

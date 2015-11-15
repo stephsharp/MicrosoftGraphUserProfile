@@ -2,7 +2,7 @@
 
 @interface O365User : NSObject
 
-@property (readonly, nonatomic) NSString *objectId;
+@property (readonly, nonatomic) NSString *userId;
 @property (readonly, nonatomic) NSString *displayName;
 @property (readonly, nonatomic) NSString *givenName;
 @property (readonly, nonatomic) NSString *surname;
@@ -13,7 +13,7 @@
 @property (readonly, nonatomic) NSString *phone;
 @property (readonly, nonatomic) NSString *email;
 
-- (instancetype)initWithId:(NSString *)objectId
+- (instancetype)initWithId:(NSString *)userId
                displayName:(NSString *)displayName
                  givenName:(NSString *)givenName
                    surname:(NSString *)surname
@@ -24,7 +24,7 @@
                      phone:(NSString *)phone
                      email:(NSString *)email;
 
-- (instancetype)initWithId:(NSString *)objectId
+- (instancetype)initWithId:(NSString *)userId
                displayName:(NSString *)displayName
                   jobTitle:(NSString *)jobTitle;
 

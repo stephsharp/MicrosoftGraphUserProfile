@@ -89,10 +89,10 @@ static NSString * const RESOURCE_ID_STRING = @"https://graph.microsoft.com/";
 }
 
 //Fetches the basic user information from Active Directory
-- (void)fetchUserWithId:(NSString *)userObjectID
+- (void)fetchUserWithId:(NSString *)userId
       completionHandler:(void (^)(O365User *, NSError *))completionHandler
 {
-    NSURL *requestURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@", _baseURL, @"users/", userObjectID]];
+    NSURL *requestURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@", _baseURL, @"users/", userId]];
 
     NSMutableURLRequest *mutableRequest = [NSMutableURLRequest requestWithURL:requestURL];
     [mutableRequest setValue:@"application/json;odata.metadata=minimal;odata.streaming=true" forHTTPHeaderField:@"accept"];
@@ -148,10 +148,10 @@ static NSString * const RESOURCE_ID_STRING = @"https://graph.microsoft.com/";
 
 #pragma mark - Fetch photos
 
-- (void)fetchPhotoInfoWithUserId:(NSString *)userObjectID
+- (void)fetchPhotoInfoWithUserId:(NSString *)userId
                completionHandler:(void (^)(NSArray *photos, NSError *error))completionHandler
 {
-    NSURL *requestURL = [self urlForPhotoInfoWithUserId:userObjectID];
+    NSURL *requestURL = [self urlForPhotoInfoWithUserId:userId];
     NSURLRequest *request = [NSURLRequest requestWithURL:requestURL];
 
     [self fetchDataWithRequest:request completionHandler:^(NSData *data, NSError *error) {
@@ -167,11 +167,11 @@ static NSString * const RESOURCE_ID_STRING = @"https://graph.microsoft.com/";
     }];
 }
 
-- (void)fetchPhotoWithUserId:(NSString *)userObjectID
+- (void)fetchPhotoWithUserId:(NSString *)userId
                         size:(NSUInteger)size
            completionHandler:(void (^)(UIImage *image, NSError *error))completionHandler
 {
-    NSURL *requestURL = [self urlForPhotoWithUserId:userObjectID size:size];
+    NSURL *requestURL = [self urlForPhotoWithUserId:userId size:size];
     NSURLRequest *request = [NSURLRequest requestWithURL:requestURL];
 
     [self fetchDataWithRequest:request completionHandler:^(NSData *data, NSError *error) {
@@ -180,14 +180,14 @@ static NSString * const RESOURCE_ID_STRING = @"https://graph.microsoft.com/";
     }];
 }
 
-- (NSURL *)urlForPhotoWithUserId:(NSString *)userObjectID size:(NSUInteger)size
+- (NSURL *)urlForPhotoWithUserId:(NSString *)userId size:(NSUInteger)size
 {
-    return [self userPhotoURLWithUserId:userObjectID size:size metadataOnly:NO];
+    return [self userPhotoURLWithUserId:userId size:size metadataOnly:NO];
 }
 
-- (NSURL *)urlForPhotoInfoWithUserId:(NSString *)userObjectID
+- (NSURL *)urlForPhotoInfoWithUserId:(NSString *)userId
 {
-    return [self userPhotoURLWithUserId:userObjectID size:0 metadataOnly:YES];
+    return [self userPhotoURLWithUserId:userId size:0 metadataOnly:YES];
 }
 
 - (NSURL *)userPhotoURLWithUserId:(NSString *)userId size:(NSUInteger)size metadataOnly:(BOOL)metadata
@@ -209,7 +209,7 @@ static NSString * const RESOURCE_ID_STRING = @"https://graph.microsoft.com/";
 
 + (O365User *)userFromJSONDictionary:(NSDictionary *)jsonDictionary
 {
-    return [[O365User alloc] initWithId:[jsonDictionary stringForKey:@"objectId"]
+    return [[O365User alloc] initWithId:[jsonDictionary stringForKey:@"id"]
                             displayName:[jsonDictionary stringForKey:@"displayName"]
                               givenName:[jsonDictionary stringForKey:@"givenName"]
                                 surname:[jsonDictionary stringForKey:@"surname"]
