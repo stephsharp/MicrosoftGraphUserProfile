@@ -9,8 +9,8 @@
                   jobTitle:(NSString *)jobTitle
                 department:(NSString *)department
                       city:(NSString *)city
-                    mobile:(NSString *)mobile
-                     phone:(NSString *)phone
+               mobilePhone:(NSString *)mobilePhone
+            businessPhones:(NSArray *)businessPhones
                      email:(NSString *)email
 {
     self = [super init];
@@ -23,8 +23,8 @@
         _jobTitle = jobTitle;
         _department = department;
         _city = city;
-        _mobile = mobile;
-        _phone = phone;
+        _mobilePhone = mobilePhone;
+        _businessPhones = businessPhones;
         _email = email;
     }
 
@@ -42,8 +42,8 @@
                    jobTitle:jobTitle
                  department:nil
                        city:nil
-                     mobile:nil
-                      phone:nil
+                mobilePhone:nil
+             businessPhones:nil
                       email:nil];
 }
 

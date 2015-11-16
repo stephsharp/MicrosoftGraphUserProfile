@@ -216,8 +216,8 @@ static NSString * const RESOURCE_ID_STRING = @"https://graph.microsoft.com/";
                                jobTitle:[jsonDictionary stringForKey:@"jobTitle"]
                              department:[jsonDictionary stringForKey:@"department"]
                                    city:[jsonDictionary stringForKey:@"city"]
-                                 mobile:[jsonDictionary stringForKey:@"mobile"]
-                                  phone:[jsonDictionary stringForKey:@"telephoneNumber"]
+                            mobilePhone:[jsonDictionary stringForKey:@"mobilePhone"]
+                         businessPhones:jsonDictionary[@"businessPhones"]
                                   email:[jsonDictionary stringForKey:@"mail"]];
 }
 
