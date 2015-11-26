@@ -1,6 +1,6 @@
 #import <Foundation/Foundation.h>
 
-@interface NSDictionary (O365)
+@interface NSDictionary (MGUserProfile)
 
 - (NSString *)stringForKey:(NSString *)key;
 

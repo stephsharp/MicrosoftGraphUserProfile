@@ -1,6 +1,6 @@
-#import "NSDictionary+O365.h"
+#import "NSDictionary+MGUserProfile.h"
 
-@implementation NSDictionary (O365)
+@implementation NSDictionary (MGUserProfile)
 
 - (NSString *)stringForKey:(NSString *)key
 {

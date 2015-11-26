@@ -2,12 +2,12 @@
  * Copyright (c) Microsoft. All rights reserved. Licensed under the MIT license. See full license at the bottom of this file.
  */
 
-#import "O365AuthenticationManager.h"
+#import "MGAuthenticationManager.h"
 #import <ADALiOS/ADAuthenticationSettings.h>
 #import <ADALiOS/ADLogger.h>
 #import <ADALiOS/ADInstanceDiscovery.h>
 
-@interface O365AuthenticationManager ()
+@interface MGAuthenticationManager ()
 
 @property (nonatomic) ADAuthenticationContext *authContext;
 @property (readonly, nonatomic) NSURL *redirectURL;
@@ -16,7 +16,7 @@
 
 @end
 
-@implementation O365AuthenticationManager
+@implementation MGAuthenticationManager
 
 - (instancetype)initWithRedirectURL:(NSString *)redirectURL
                            clientID:(NSString *)clientID

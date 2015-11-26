@@ -11,7 +11,7 @@
 
 @end
 
-@interface O365AuthenticationManager : NSObject
+@interface MGAuthenticationManager : NSObject
 
 @property (nonatomic) id<AuthenticationResultHandler> authenticationResultHandler;
 

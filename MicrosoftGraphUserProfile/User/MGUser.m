@@ -1,6 +1,6 @@
-#import "O365User.h"
+#import "MGUser.h"
 
-@implementation O365User
+@implementation MGUser
 
 - (instancetype)initWithId:(NSString *)userId
                displayName:(NSString *)displayName

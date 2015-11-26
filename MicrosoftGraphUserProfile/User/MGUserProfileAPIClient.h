@@ -3,22 +3,22 @@
  */
 
 #import <Foundation/Foundation.h>
-#import "O365AuthenticationManager.h"
-#import "O365User.h"
+#import "MGAuthenticationManager.h"
+#import "MGUser.h"
 
-@interface O365UnifiedAPIClient : NSObject
+@interface MGUserProfileAPIClient : NSObject
 
 //Note: Usually the tenant string looks like x.onmicrosoft.com/
 //DO NOT FORGET END THE STRING WITH A '/'
 - (instancetype)initWithTenant:(NSString *)tenant
-         authenticationManager:(O365AuthenticationManager *)authenticationManager NS_DESIGNATED_INITIALIZER;
+         authenticationManager:(MGAuthenticationManager *)authenticationManager NS_DESIGNATED_INITIALIZER;
 - (instancetype)init NS_UNAVAILABLE;
 
 - (void)fetchAllUsersWithProgressHandler:(void (^)(NSArray *users, NSError *error))progressHandler
                        completionHandler:(void (^)(NSArray *users, NSError *error))completionHandler;
 
 - (void)fetchUserWithId:(NSString *)userId
-      completionHandler:(void (^)(O365User *user, NSError *error))completionHandler;
+      completionHandler:(void (^)(MGUser *user, NSError *error))completionHandler;
 
 - (void)fetchPhotoInfoWithUserId:(NSString *)userId
                completionHandler:(void (^)(NSArray *photos, NSError *error))completionHandler;

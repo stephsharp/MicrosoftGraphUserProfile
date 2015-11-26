@@ -2,26 +2,26 @@
  * Copyright (c) Microsoft. All rights reserved. Licensed under the MIT license. See full license at the bottom of this file.
  */
 
-#import "O365UnifiedAPIClient.h"
-#import "NSDictionary+O365.h"
+#import "MGUserProfileAPIClient.h"
+#import "NSDictionary+MGUserProfile.h"
 
 //Standard URL strings needed for the unified endpoint
 static NSString * const BASE_URL_STRING = @"https://graph.microsoft.com/beta/";
 static NSString * const RESOURCE_ID_STRING = @"https://graph.microsoft.com/";
 
-@interface O365UnifiedAPIClient ()
+@interface MGUserProfileAPIClient ()
 
 @property (readonly, nonatomic) NSString *baseURL;
 @property (readonly, nonatomic) NSString *resourceID;
-@property (readonly, nonatomic) O365AuthenticationManager *authenticationManager;
+@property (readonly, nonatomic) MGAuthenticationManager *authenticationManager;
 
 @end
 
-@implementation O365UnifiedAPIClient
+@implementation MGUserProfileAPIClient
 
 #pragma mark - Initializers
 
-- (instancetype)initWithTenant:(NSString *)tenant authenticationManager:(O365AuthenticationManager *)authenticationManager
+- (instancetype)initWithTenant:(NSString *)tenant authenticationManager:(MGAuthenticationManager *)authenticationManager
 {
     self = [super init];
 
@@ -72,7 +72,7 @@ static NSString * const RESOURCE_ID_STRING = @"https://graph.microsoft.com/";
         NSMutableArray *users = [[NSMutableArray alloc] init];
 
         for (NSDictionary *userData in jsonPayload[@"value"]) {
-            O365User *user = [O365UnifiedAPIClient userFromJSONDictionary:userData];
+            MGUser *user = [MGUserProfileAPIClient userFromJSONDictionary:userData];
             [users addObject:user];
         }
 
@@ -90,7 +90,7 @@ static NSString * const RESOURCE_ID_STRING = @"https://graph.microsoft.com/";
 
 //Fetches the basic user information from Active Directory
 - (void)fetchUserWithId:(NSString *)userId
-      completionHandler:(void (^)(O365User *, NSError *))completionHandler
+      completionHandler:(void (^)(MGUser *, NSError *))completionHandler
 {
     NSURL *requestURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@", _baseURL, @"users/", userId]];
 
@@ -107,7 +107,7 @@ static NSString * const RESOURCE_ID_STRING = @"https://graph.microsoft.com/";
                                                                     options:0
                                                                       error:NULL];
 
-        O365User *user = [O365UnifiedAPIClient userFromJSONDictionary:jsonPayload];
+        MGUser *user = [MGUserProfileAPIClient userFromJSONDictionary:jsonPayload];
         completionHandler(user, nil);
     }];
 }
@@ -207,18 +207,18 @@ static NSString * const RESOURCE_ID_STRING = @"https://graph.microsoft.com/";
 
 #pragma mark - JSON helpers
 
-+ (O365User *)userFromJSONDictionary:(NSDictionary *)jsonDictionary
++ (MGUser *)userFromJSONDictionary:(NSDictionary *)jsonDictionary
 {
-    return [[O365User alloc] initWithId:[jsonDictionary stringForKey:@"id"]
-                            displayName:[jsonDictionary stringForKey:@"displayName"]
-                              givenName:[jsonDictionary stringForKey:@"givenName"]
-                                surname:[jsonDictionary stringForKey:@"surname"]
-                               jobTitle:[jsonDictionary stringForKey:@"jobTitle"]
-                             department:[jsonDictionary stringForKey:@"department"]
-                                   city:[jsonDictionary stringForKey:@"city"]
-                            mobilePhone:[jsonDictionary stringForKey:@"mobilePhone"]
-                         businessPhones:jsonDictionary[@"businessPhones"]
-                                  email:[jsonDictionary stringForKey:@"mail"]];
+    return [[MGUser alloc] initWithId:[jsonDictionary stringForKey:@"id"]
+                          displayName:[jsonDictionary stringForKey:@"displayName"]
+                            givenName:[jsonDictionary stringForKey:@"givenName"]
+                              surname:[jsonDictionary stringForKey:@"surname"]
+                             jobTitle:[jsonDictionary stringForKey:@"jobTitle"]
+                           department:[jsonDictionary stringForKey:@"department"]
+                                 city:[jsonDictionary stringForKey:@"city"]
+                          mobilePhone:[jsonDictionary stringForKey:@"mobilePhone"]
+                       businessPhones:jsonDictionary[@"businessPhones"]
+                                email:[jsonDictionary stringForKey:@"mail"]];
 }
 
 - (NSDictionary *)sanitizeKeysInDictionary:(NSDictionary *)dictionary

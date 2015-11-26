@@ -1,6 +1,6 @@
 #import <Foundation/Foundation.h>
 
-@interface O365User : NSObject
+@interface MGUser : NSObject
 
 @property (readonly, nonatomic) NSString *userId;
 @property (readonly, nonatomic) NSString *displayName;
