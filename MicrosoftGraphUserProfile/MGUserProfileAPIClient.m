@@ -4,12 +4,15 @@
 
 #import "MGUserProfileAPIClient.h"
 #import "NSDictionary+MGUserProfile.h"
+#import "MGErrorCodes.h"
 
 //Standard URL strings needed for the unified endpoint
 static NSString * const BASE_URL_STRING = @"https://graph.microsoft.com/v1.0/";
 static NSString * const RESOURCE_ID_STRING = @"https://graph.microsoft.com/";
 
 static NSString *const MGDefaultUserSelectList = @"id,displayName,givenName,surname,jobTitle,department,city,mobilePhone,businessPhones,mail,userType";
+
+NSString* const MGUserPhotoErrorDomain = @"MGUserPhotoErrorDomain";
 
 @interface MGUserProfileAPIClient ()
 
@@ -166,6 +169,15 @@ static NSString *const MGDefaultUserSelectList = @"id,displayName,givenName,surn
     NSURLRequest *request = [NSURLRequest requestWithURL:requestURL];
 
     [self fetchDataWithRequest:request completionHandler:^(NSData *data, NSError *error) {
+
+        NSDictionary *jsonPayload = [NSJSONSerialization JSONObjectWithData:data
+                                                                    options:0
+                                                                      error:NULL];
+        if (jsonPayload[@"error"]) {
+            NSError *error = [self userPhotoErrorWithJson:jsonPayload[@"error"]];
+            completionHandler(nil, error);
+        }
+
         UIImage *image = [UIImage imageWithData:data];
         completionHandler(image, nil);
     }];
@@ -188,6 +200,12 @@ static NSString *const MGDefaultUserSelectList = @"id,displayName,givenName,surn
         NSDictionary *jsonPayload = [NSJSONSerialization JSONObjectWithData:data
                                                                     options:0
                                                                       error:NULL];
+
+        if (jsonPayload[@"error"]) {
+            NSError *error = [self userPhotoErrorWithJson:jsonPayload[@"error"]];
+            completionHandler(nil, error);
+        }
+
         completionHandler(jsonPayload, nil);
     }];
 }
@@ -237,6 +255,21 @@ static NSString *const MGDefaultUserSelectList = @"id,displayName,givenName,surn
     }
 
     return [sanitizedMutableDictionary copy];
+}
+
+#pragma mark - Error handling
+
+- (NSError *)userPhotoErrorWithJson:(NSDictionary *)json
+{
+    NSString *codeString = json[@"code"];
+    NSString *messageString = json[@"message"];
+
+    NSDictionary *userInfo = @{ NSLocalizedDescriptionKey: NSLocalizedString(codeString, nil),
+                                NSLocalizedFailureReasonErrorKey: NSLocalizedString(messageString, nil),
+                                };
+
+    NSInteger code = [codeString isEqualToString:@"ErrorItemNotFound"] ? MG_ERROR_PHOTO_NOT_FOUND : MG_ERROR_UNKNOWN;
+    return [NSError errorWithDomain:MGUserPhotoErrorDomain code:code userInfo:userInfo];
 }
 
 @end

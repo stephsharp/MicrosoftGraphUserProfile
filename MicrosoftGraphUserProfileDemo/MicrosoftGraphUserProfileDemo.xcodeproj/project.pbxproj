@@ -33,6 +33,7 @@
 /* Begin PBXFileReference section */
 		1084EB59DE569D8DD2A7B895 /* Pods-MicrosoftGraphUserProfileDemo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MicrosoftGraphUserProfileDemo.release.xcconfig"; path = "Pods/Target Support Files/Pods-MicrosoftGraphUserProfileDemo/Pods-MicrosoftGraphUserProfileDemo.release.xcconfig"; sourceTree = "<group>"; };
 		13949C28A218CF9A235EFB9F /* Pods-MicrosoftGraphUserProfileDemo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MicrosoftGraphUserProfileDemo.debug.xcconfig"; path = "Pods/Target Support Files/Pods-MicrosoftGraphUserProfileDemo/Pods-MicrosoftGraphUserProfileDemo.debug.xcconfig"; sourceTree = "<group>"; };
+		8202295A1C0C16E500CE8DF5 /* MGErrorCodes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MGErrorCodes.h; sourceTree = "<group>"; };
 		82408ED11C0BECAA00A7C5E1 /* MGAuthenticationManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MGAuthenticationManager.h; sourceTree = "<group>"; };
 		82408ED21C0BECAA00A7C5E1 /* MGAuthenticationManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MGAuthenticationManager.m; sourceTree = "<group>"; };
 		82408ED31C0BECAA00A7C5E1 /* MGUser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MGUser.h; sourceTree = "<group>"; };
@@ -155,6 +156,7 @@
 				82408ED71C0BECAA00A7C5E1 /* NSDictionary+MGUserProfile.h */,
 				82408ED81C0BECAA00A7C5E1 /* NSDictionary+MGUserProfile.m */,
 				82408ED91C0BECAA00A7C5E1 /* MicrosoftGraphUserProfile.h */,
+				8202295A1C0C16E500CE8DF5 /* MGErrorCodes.h */,
 			);
 			name = MicrosoftGraphUserProfile;
 			path = ../MicrosoftGraphUserProfile;
