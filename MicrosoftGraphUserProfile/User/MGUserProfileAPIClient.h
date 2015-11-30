@@ -22,12 +22,11 @@
 
 - (void)fetchCurrentUserWithCompletionHandler:(void (^)(MGUser *user, NSError *error))completionHandler;
 
+- (void)fetchPhotoWithUserId:(NSString *)userId
+           completionHandler:(void (^)(UIImage *image, NSError *error))completionHandler;
+
 - (void)fetchPhotoInfoWithUserId:(NSString *)userId
                completionHandler:(void (^)(NSDictionary *photoInfo, NSError *error))completionHandler;
-
-- (void)fetchPhotoWithUserId:(NSString *)userId
-                        size:(NSUInteger)size
-           completionHandler:(void (^)(UIImage *image, NSError *error))completionHandler;
 
 - (NSURL *)urlForPhotoWithUserId:(NSString *)userId size:(NSUInteger)size;
 

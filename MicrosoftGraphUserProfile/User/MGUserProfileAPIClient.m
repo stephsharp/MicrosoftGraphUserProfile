@@ -159,6 +159,18 @@ static NSString *const MGDefaultUserSelectList = @"id,displayName,givenName,surn
 
 #pragma mark - Fetch photos
 
+- (void)fetchPhotoWithUserId:(NSString *)userId
+           completionHandler:(void (^)(UIImage *image, NSError *error))completionHandler
+{
+    NSURL *requestURL = [self urlForPhotoWithUserId:userId];
+    NSURLRequest *request = [NSURLRequest requestWithURL:requestURL];
+
+    [self fetchDataWithRequest:request completionHandler:^(NSData *data, NSError *error) {
+        UIImage *image = [UIImage imageWithData:data];
+        completionHandler(image, nil);
+    }];
+}
+
 - (void)fetchPhotoInfoWithUserId:(NSString *)userId
                completionHandler:(void (^)(NSDictionary *photoInfo, NSError *error))completionHandler
 {
@@ -180,42 +192,23 @@ static NSString *const MGDefaultUserSelectList = @"id,displayName,givenName,surn
     }];
 }
 
-- (void)fetchPhotoWithUserId:(NSString *)userId
-                        size:(NSUInteger)size
-           completionHandler:(void (^)(UIImage *image, NSError *error))completionHandler
+- (NSURL *)urlForPhotoWithUserId:(NSString *)userId
 {
-    NSURL *requestURL = [self urlForPhotoWithUserId:userId size:size];
-    NSURLRequest *request = [NSURLRequest requestWithURL:requestURL];
-
-    [self fetchDataWithRequest:request completionHandler:^(NSData *data, NSError *error) {
-        UIImage *image = [UIImage imageWithData:data];
-        completionHandler(image, nil);
-    }];
-}
-
-- (NSURL *)urlForPhotoWithUserId:(NSString *)userId size:(NSUInteger)size
-{
-    return [self userPhotoURLWithUserId:userId size:size metadataOnly:NO];
+    NSString *requestURLString = [NSString stringWithFormat:@"%@%@", [self photoURLStringWithUserId:userId], @"$value"];
+    return [NSURL URLWithString:requestURLString];
 }
 
 - (NSURL *)urlForPhotoInfoWithUserId:(NSString *)userId
 {
-    return [self userPhotoURLWithUserId:userId size:0 metadataOnly:YES];
+    NSString *requestURLString = [self photoURLStringWithUserId:userId];
+    return [NSURL URLWithString:requestURLString];
 }
 
-- (NSURL *)userPhotoURLWithUserId:(NSString *)userId size:(NSUInteger)size metadataOnly:(BOOL)metadata
+- (NSString *)photoURLStringWithUserId:(NSString *)userId
 {
-//    NSString *sizeString = (size > 0) ? [NSString stringWithFormat:@"%luX%lu/", (unsigned long)size, (unsigned long)size] : @"";
-    NSString *userPhotoString = @"/photo/";
-    NSString *valueString = metadata ? @"" : @"$value";
+    NSString *requestURLString = [NSString stringWithFormat:@"%@%@%@%@", self.baseURLWithTenant, @"users/", userId, @"/photo/"];
 
-//    if (size > 0 || metadata) {
-//        userPhotoString = @"/photos/";
-//    }
-
-    NSString *requestURL = [NSString stringWithFormat:@"%@%@%@%@%@", self.baseURLWithTenant, @"users/", userId, userPhotoString, /*sizeString,*/ valueString];
-
-    return [NSURL URLWithString:requestURL];
+    return requestURLString;
 }
 
 #pragma mark - JSON helpers
