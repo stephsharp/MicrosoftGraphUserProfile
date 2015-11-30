@@ -8,7 +8,10 @@ Pod::Spec.new do |s|
   s.platform     = :ios, '8.0'
   s.source       = { :git => "https://github.com/stephsharp/MicrosoftGraphUserProfile.git", :tag => "v#{s.version}" }
   s.source_files = 'MicrosoftGraphUserProfile'
-  s.public_header_files = [ "MicrosoftGraphUserProfile/MicrosoftGraphUserProfile.h" ]
+  s.public_header_files = [ "MicrosoftGraphUserProfile/MicrosoftGraphUserProfile.h",
+                            "MicrosoftGraphUserProfile/MGAuthenticationManager.h", 
+                            "MicrosoftGraphUserProfile/MGUserProfileAPIClient.h",
+                            "MicrosoftGraphUserProfile/MGUser.h" ]
   s.dependency 'ADALiOS', '~> 1.2'
   s.requires_arc = true
 end
