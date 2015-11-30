@@ -20,6 +20,8 @@
 - (void)fetchUserWithId:(NSString *)userId
       completionHandler:(void (^)(MGUser *user, NSError *error))completionHandler;
 
+- (void)fetchCurrentUserWithCompletionHandler:(void (^)(MGUser *user, NSError *error))completionHandler;
+
 - (void)fetchPhotoInfoWithUserId:(NSString *)userId
                completionHandler:(void (^)(NSDictionary *photoInfo, NSError *error))completionHandler;
 

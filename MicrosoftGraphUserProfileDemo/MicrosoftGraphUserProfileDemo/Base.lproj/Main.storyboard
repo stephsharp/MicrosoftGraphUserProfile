@@ -55,13 +55,18 @@
                     </tableView>
                     <navigationItem key="navigationItem" title="Microsoft Graph Demo" id="Sse-xA-IYC">
                         <barButtonItem key="backBarButtonItem" title="Back" id="GMD-Bs-TQo"/>
+                        <barButtonItem key="rightBarButtonItem" title="Me" id="P1m-on-nGs">
+                            <connections>
+                                <segue destination="1vI-EI-4W6" kind="show" identifier="MyProfile" id="V9Y-5O-vIO"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="jBV-FZ-QYu" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1066" y="300"/>
         </scene>
-        <!--Profile Table View Controller-->
+        <!--Profile-->
         <scene sceneID="GUV-FM-hRy">
             <objects>
                 <tableViewController id="1vI-EI-4W6" customClass="MGProfileTableViewController" sceneMemberID="viewController">
@@ -148,6 +153,7 @@
                             <outlet property="delegate" destination="1vI-EI-4W6" id="oAK-y4-MLr"/>
                         </connections>
                     </tableView>
+                    <navigationItem key="navigationItem" title="Profile" id="y1C-ed-3Gi"/>
                     <connections>
                         <outlet property="displayNameLabel" destination="I3Z-1Q-YhS" id="SJf-R0-dWd"/>
                         <outlet property="jobTitleLabel" destination="j6x-28-oWa" id="EH6-Fg-rE0"/>
@@ -177,4 +183,7 @@
             <point key="canvasLocation" x="254" y="300"/>
         </scene>
     </scenes>
+    <inferredMetricsTieBreakers>
+        <segue reference="V9Y-5O-vIO"/>
+    </inferredMetricsTieBreakers>
 </document>

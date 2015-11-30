@@ -61,8 +61,7 @@ static MGPersonController *_sharedPersonController = nil;
 {
     __weak MGPersonController *weakSelf = self;
 
-    NSString *currentLoggedInUser = [[NSUserDefaults standardUserDefaults] stringForKey:@"LogInUser"];
-    [self.userProfileAPIClient fetchUserWithId:currentLoggedInUser completionHandler:^(MGUser *user, NSError *error) {
+    [self.userProfileAPIClient fetchCurrentUserWithCompletionHandler:^(MGUser *user, NSError *error) {
         if (!error) {
             if ([user isKindOfClass:[MGUser class]]) {
                 MGPerson *person = [[MGPerson alloc] initWithUser:user];

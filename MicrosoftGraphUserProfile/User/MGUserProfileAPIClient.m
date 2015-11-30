@@ -9,9 +9,12 @@
 static NSString * const BASE_URL_STRING = @"https://graph.microsoft.com/v1.0/";
 static NSString * const RESOURCE_ID_STRING = @"https://graph.microsoft.com/";
 
+static NSString *const MGDefaultUserSelectList = @"id,displayName,givenName,surname,jobTitle,department,city,mobilePhone,businessPhones,mail,userType";
+
 @interface MGUserProfileAPIClient ()
 
 @property (readonly, nonatomic) NSString *baseURL;
+@property (readonly, nonatomic) NSString *baseURLWithTenant;
 @property (readonly, nonatomic) NSString *resourceID;
 @property (readonly, nonatomic) MGAuthenticationManager *authenticationManager;
 
@@ -26,7 +29,8 @@ static NSString * const RESOURCE_ID_STRING = @"https://graph.microsoft.com/";
     self = [super init];
 
     if (self) {
-        _baseURL = [NSString stringWithFormat:@"%@%@", BASE_URL_STRING, tenant];
+        _baseURL = BASE_URL_STRING;
+        _baseURLWithTenant = [NSString stringWithFormat:@"%@%@", BASE_URL_STRING, tenant];
         _resourceID = RESOURCE_ID_STRING;
         _authenticationManager = authenticationManager;
     }
@@ -46,7 +50,7 @@ static NSString * const RESOURCE_ID_STRING = @"https://graph.microsoft.com/";
 - (void)fetchAllUsersWithProgressHandler:(void (^)(NSArray *users, NSError *error))progressHandler
                        completionHandler:(void (^)(NSArray *users, NSError *error))completionHandler
 {
-    NSString *requestURLString = [NSString stringWithFormat:@"%@%@", _baseURL, @"users?$orderby=displayName&$select=id,displayName,givenName,surname,jobTitle,department,city,mobilePhone,businessPhones,mail,userType"];
+    NSString *requestURLString = [NSString stringWithFormat:@"%@%@%@", self.baseURLWithTenant, @"users?$orderby=displayName&$select=", MGDefaultUserSelectList];
 
 
     [self fetchAllUsersWithRequestURL:requestURLString progressHandler:progressHandler completionHandler:completionHandler];
@@ -92,8 +96,20 @@ static NSString * const RESOURCE_ID_STRING = @"https://graph.microsoft.com/";
 - (void)fetchUserWithId:(NSString *)userId
       completionHandler:(void (^)(MGUser *, NSError *))completionHandler
 {
-    NSURL *requestURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@%@", _baseURL, @"users/", userId, @"?$select=id,displayName,givenName,surname,jobTitle,department,city,mobilePhone,businessPhones,mail,userType"]];
+    NSURL *requestURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@%@%@", self.baseURLWithTenant, @"users/", userId, @"?$select=", MGDefaultUserSelectList]];
 
+    [self fetchUserWithRequestURL:requestURL completionHandler:completionHandler];
+}
+
+- (void)fetchCurrentUserWithCompletionHandler:(void (^)(MGUser *user, NSError *error))completionHandler
+{
+    NSURL *requestURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@%@", self.baseURL, @"me/", @"?$select=", MGDefaultUserSelectList]];
+
+    [self fetchUserWithRequestURL:requestURL completionHandler:completionHandler];
+}
+
+- (void)fetchUserWithRequestURL:(NSURL *)requestURL completionHandler:(void (^)(MGUser *user, NSError *error))completionHandler
+{
     NSMutableURLRequest *mutableRequest = [NSMutableURLRequest requestWithURL:requestURL];
     [mutableRequest setValue:@"application/json;odata.metadata=minimal;odata.streaming=true" forHTTPHeaderField:@"accept"];
 
@@ -197,7 +213,7 @@ static NSString * const RESOURCE_ID_STRING = @"https://graph.microsoft.com/";
 //        userPhotoString = @"/photos/";
 //    }
 
-    NSString *requestURL = [NSString stringWithFormat:@"%@%@%@%@%@", _baseURL, @"users/", userId, userPhotoString, /*sizeString,*/ valueString];
+    NSString *requestURL = [NSString stringWithFormat:@"%@%@%@%@%@", self.baseURLWithTenant, @"users/", userId, userPhotoString, /*sizeString,*/ valueString];
 
     return [NSURL URLWithString:requestURL];
 }

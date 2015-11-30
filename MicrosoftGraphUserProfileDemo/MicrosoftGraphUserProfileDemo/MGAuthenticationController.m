@@ -24,9 +24,7 @@ static NSString *const RESOURCE_ID_STRING = @"https://graph.microsoft.com/";
 
 - (void)handleAuthenticationResultWithCurrentUserId:(NSString *)userId token:(NSString *)token
 {
-//    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-//    [userDefaults setObject:userId forKey:@"LogInUser"];
-//    [userDefaults synchronize];
+
 }
 
 @end

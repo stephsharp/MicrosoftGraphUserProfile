@@ -60,7 +60,7 @@
 
 - (void)authenticationControllerDidComplete:(MGAuthenticationController *)authenticationController
 {
-    //[[MGPersonController sharedPersonController] fetchCurrentPersonWithCompletion:nil];
+    [[MGPersonController sharedPersonController] fetchCurrentPersonWithCompletion:nil];
 
     dispatch_async(dispatch_get_main_queue(), ^{
         [self beginRefreshing];
@@ -304,6 +304,10 @@
             MGProfileTableViewController *profileTVC = (MGProfileTableViewController *)segue.destinationViewController;
             profileTVC.person = selectedPerson;
         }
+    }
+    else if ([segue.identifier isEqualToString:@"MyProfile"]) {
+        MGProfileTableViewController *profileTVC = (MGProfileTableViewController *)segue.destinationViewController;
+        profileTVC.person = self.personController.currentPerson;
     }
 }
 
