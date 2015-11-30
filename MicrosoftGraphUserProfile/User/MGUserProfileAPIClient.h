@@ -21,7 +21,7 @@
       completionHandler:(void (^)(MGUser *user, NSError *error))completionHandler;
 
 - (void)fetchPhotoInfoWithUserId:(NSString *)userId
-               completionHandler:(void (^)(NSArray *photos, NSError *error))completionHandler;
+               completionHandler:(void (^)(NSDictionary *photoInfo, NSError *error))completionHandler;
 
 - (void)fetchPhotoWithUserId:(NSString *)userId
                         size:(NSUInteger)size

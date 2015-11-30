@@ -6,7 +6,7 @@
 #import "NSDictionary+MGUserProfile.h"
 
 //Standard URL strings needed for the unified endpoint
-static NSString * const BASE_URL_STRING = @"https://graph.microsoft.com/beta/";
+static NSString * const BASE_URL_STRING = @"https://graph.microsoft.com/v1.0/";
 static NSString * const RESOURCE_ID_STRING = @"https://graph.microsoft.com/";
 
 @interface MGUserProfileAPIClient ()
@@ -46,7 +46,8 @@ static NSString * const RESOURCE_ID_STRING = @"https://graph.microsoft.com/";
 - (void)fetchAllUsersWithProgressHandler:(void (^)(NSArray *users, NSError *error))progressHandler
                        completionHandler:(void (^)(NSArray *users, NSError *error))completionHandler
 {
-    NSString *requestURLString = [NSString stringWithFormat:@"%@%@", _baseURL, @"users?$orderby=displayName"];
+    NSString *requestURLString = [NSString stringWithFormat:@"%@%@", _baseURL, @"users?$orderby=displayName&$select=id,displayName,givenName,surname,jobTitle,department,city,mobilePhone,businessPhones,mail,userType"];
+
 
     [self fetchAllUsersWithRequestURL:requestURLString progressHandler:progressHandler completionHandler:completionHandler];
 }
@@ -88,11 +89,10 @@ static NSString * const RESOURCE_ID_STRING = @"https://graph.microsoft.com/";
     }];
 }
 
-//Fetches the basic user information from Active Directory
 - (void)fetchUserWithId:(NSString *)userId
       completionHandler:(void (^)(MGUser *, NSError *))completionHandler
 {
-    NSURL *requestURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@", _baseURL, @"users/", userId]];
+    NSURL *requestURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@%@%@", _baseURL, @"users/", userId, @"?$select=id,displayName,givenName,surname,jobTitle,department,city,mobilePhone,businessPhones,mail,userType"]];
 
     NSMutableURLRequest *mutableRequest = [NSMutableURLRequest requestWithURL:requestURL];
     [mutableRequest setValue:@"application/json;odata.metadata=minimal;odata.streaming=true" forHTTPHeaderField:@"accept"];
@@ -149,12 +149,14 @@ static NSString * const RESOURCE_ID_STRING = @"https://graph.microsoft.com/";
 #pragma mark - Fetch photos
 
 - (void)fetchPhotoInfoWithUserId:(NSString *)userId
-               completionHandler:(void (^)(NSArray *photos, NSError *error))completionHandler
+               completionHandler:(void (^)(NSDictionary *photoInfo, NSError *error))completionHandler
 {
     NSURL *requestURL = [self urlForPhotoInfoWithUserId:userId];
-    NSURLRequest *request = [NSURLRequest requestWithURL:requestURL];
 
-    [self fetchDataWithRequest:request completionHandler:^(NSData *data, NSError *error) {
+    NSMutableURLRequest *mutableRequest = [NSMutableURLRequest requestWithURL:requestURL];
+    [mutableRequest setValue:@"application/json;odata.metadata=minimal;odata.streaming=true" forHTTPHeaderField:@"accept"];
+
+    [self fetchDataWithRequest:[mutableRequest copy] completionHandler:^(NSData *data, NSError *error) {
         if (error) {
             completionHandler(nil, error);
             return;
@@ -163,7 +165,7 @@ static NSString * const RESOURCE_ID_STRING = @"https://graph.microsoft.com/";
         NSDictionary *jsonPayload = [NSJSONSerialization JSONObjectWithData:data
                                                                     options:0
                                                                       error:NULL];
-        completionHandler(jsonPayload[@"value"], nil);
+        completionHandler(jsonPayload, nil);
     }];
 }
 
@@ -192,15 +194,15 @@ static NSString * const RESOURCE_ID_STRING = @"https://graph.microsoft.com/";
 
 - (NSURL *)userPhotoURLWithUserId:(NSString *)userId size:(NSUInteger)size metadataOnly:(BOOL)metadata
 {
-    NSString *sizeString = (size > 0) ? [NSString stringWithFormat:@"%luX%lu/", (unsigned long)size, (unsigned long)size] : @"";
+//    NSString *sizeString = (size > 0) ? [NSString stringWithFormat:@"%luX%lu/", (unsigned long)size, (unsigned long)size] : @"";
     NSString *userPhotoString = @"/photo/";
     NSString *valueString = metadata ? @"" : @"$value";
 
-    if (size > 0 || metadata) {
-        userPhotoString = @"/photos/";
-    }
+//    if (size > 0 || metadata) {
+//        userPhotoString = @"/photos/";
+//    }
 
-    NSString *requestURL = [NSString stringWithFormat:@"%@%@%@%@%@%@", _baseURL, @"users/", userId, userPhotoString, sizeString, valueString];
+    NSString *requestURL = [NSString stringWithFormat:@"%@%@%@%@%@", _baseURL, @"users/", userId, userPhotoString, /*sizeString,*/ valueString];
 
     return [NSURL URLWithString:requestURL];
 }
