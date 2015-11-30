@@ -2,8 +2,10 @@
 #import "MGPersonController.h"
 #import "MGPerson.h"
 #import "NSString+MGDemo.h"
+#import "MGAuthenticationController.h"
+#import <ADALiOS/ADErrorCodes.h>
 
-@interface MGDemoTableViewController () <UITableViewDataSource, UITableViewDelegate>
+@interface MGDemoTableViewController () <UITableViewDataSource, UITableViewDelegate,MGAuthenticationControllerDelegate>
 
 @property (nonatomic) MGPersonController *personController;
 
@@ -42,20 +44,46 @@
     if (self.personController.people.count > 0) {
         [self updatePersonDictionary];
     }
-}
 
-- (void)viewDidAppear:(BOOL)animated
-{
-    [super viewDidAppear:animated];
-
-    if (!self.personController.people.count) {
-        [self beginRefreshing];
-    }
+    MGAuthenticationController *authController = [MGAuthenticationController new];
+    authController.delegate = self;
+    [authController startAuthentication];
 }
 
 - (void)dealloc
 {
     [self.personController removeObserver:self forKeyPath:@"people"];
+}
+
+#pragma mark - MGAuthenticationControllerDelegate
+
+- (void)authenticationControllerDidComplete:(MGAuthenticationController *)authenticationController
+{
+    //[[MGPersonController sharedPersonController] fetchCurrentPersonWithCompletion:nil];
+
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self beginRefreshing];
+    });
+}
+
+- (void)authenticationController:(MGAuthenticationController *)authenticationController didFailWithError:(NSError *)error
+{
+    if (error.code != AD_ERROR_USER_CANCEL && error.code != AD_ERROR_SUCCEEDED) {
+        [self showAlertForError:error title:@"Authentication error"];
+    }
+}
+
+- (void)showAlertForError:(NSError *)error title:(NSString *)title
+{
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:title
+                                                                             message:error.localizedDescription
+                                                                      preferredStyle:UIAlertControllerStyleAlert];
+
+    [alertController addAction:[UIAlertAction actionWithTitle:@"OK"
+                                                        style:UIAlertActionStyleCancel
+                                                      handler:nil]];
+
+    [self presentViewController:alertController animated:YES completion:nil];
 }
 
 #pragma mark - Update staff list
