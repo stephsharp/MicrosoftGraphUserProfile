@@ -136,11 +136,6 @@ static NSString * const RESOURCE_ID_STRING = @"https://graph.microsoft.com/";
 
                                                  [[delegateFreeSession dataTaskWithRequest:mutableRequest
                                                                          completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
-                                                                             NSLog(@"Got response %@ with error %@.\n", response, error);
-                                                                             NSLog(@"DATA:\n%@\nEND DATA\n",
-                                                                                   [[NSString alloc] initWithData:data
-                                                                                                         encoding:NSUTF8StringEncoding]);
-
                                                                              completionHandler(data, error);
                                                                          }] resume];
                                              }];
