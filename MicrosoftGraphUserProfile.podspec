@@ -11,7 +11,8 @@ Pod::Spec.new do |s|
   s.public_header_files = [ "MicrosoftGraphUserProfile/MicrosoftGraphUserProfile.h",
                             "MicrosoftGraphUserProfile/MGAuthenticationManager.h", 
                             "MicrosoftGraphUserProfile/MGUserProfileAPIClient.h",
-                            "MicrosoftGraphUserProfile/MGUser.h" ]
+                            "MicrosoftGraphUserProfile/MGUser.h",
+                            "MicrosoftGraphUserProfile/MGErrorCodes.h" ]
   s.dependency 'ADALiOS', '~> 1.2'
   s.requires_arc = true
 end
