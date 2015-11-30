@@ -157,6 +157,7 @@
                     <connections>
                         <outlet property="displayNameLabel" destination="I3Z-1Q-YhS" id="SJf-R0-dWd"/>
                         <outlet property="jobTitleLabel" destination="j6x-28-oWa" id="EH6-Fg-rE0"/>
+                        <outlet property="profileImageView" destination="Odd-UF-G0z" id="6ae-L5-CE7"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="YnC-ST-Xen" userLabel="First Responder" sceneMemberID="firstResponder"/>

@@ -1,7 +1,9 @@
 #import "MGProfileTableViewController.h"
+#import "MGUserProfileAPIClient+MGDemo.h"
 
 @interface MGProfileTableViewController () <UITableViewDataSource>
 
+@property (nonatomic, weak) IBOutlet UIImageView *profileImageView;
 @property (nonatomic, weak) IBOutlet UILabel *displayNameLabel;
 @property (nonatomic, weak) IBOutlet UILabel *jobTitleLabel;
 
@@ -15,6 +17,13 @@
 
     self.displayNameLabel.text = self.person.displayName;
     self.jobTitleLabel.text = self.person.jobTitle;
+
+    MGUserProfileAPIClient *userProfileAPIClient = [MGUserProfileAPIClient userProfileAPIClient];
+    [userProfileAPIClient fetchPhotoWithUserId:self.person.personId completionHandler:^(UIImage *image, NSError *error) {
+        if (!error) {
+            self.profileImageView.image = image;
+        }
+    }];
 }
 
 #pragma mark - UITableViewDataSource
