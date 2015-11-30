@@ -25,8 +25,9 @@
 		82B3A7831C06E72B000024C3 /* MGAuthenticationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 82B3A7821C06E72B000024C3 /* MGAuthenticationController.m */; };
 		82B3A78B1C0BB77C000024C3 /* MGPerson.m in Sources */ = {isa = PBXBuildFile; fileRef = 82B3A7881C0BB77C000024C3 /* MGPerson.m */; };
 		82B3A78C1C0BB77C000024C3 /* MGPersonController.m in Sources */ = {isa = PBXBuildFile; fileRef = 82B3A78A1C0BB77C000024C3 /* MGPersonController.m */; };
-		82B3A78F1C0BBE17000024C3 /* MGDemoTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 82B3A78E1C0BBE17000024C3 /* MGDemoTableViewController.m */; };
+		82B3A78F1C0BBE17000024C3 /* MGPeopleTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 82B3A78E1C0BBE17000024C3 /* MGPeopleTableViewController.m */; };
 		82B3A7921C0BC101000024C3 /* NSString+MGDemo.m in Sources */ = {isa = PBXBuildFile; fileRef = 82B3A7911C0BC101000024C3 /* NSString+MGDemo.m */; };
+		82B3A7951C0BD438000024C3 /* MGProfileTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 82B3A7941C0BD438000024C3 /* MGProfileTableViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -64,10 +65,12 @@
 		82B3A7881C0BB77C000024C3 /* MGPerson.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MGPerson.m; sourceTree = "<group>"; };
 		82B3A7891C0BB77C000024C3 /* MGPersonController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MGPersonController.h; sourceTree = "<group>"; };
 		82B3A78A1C0BB77C000024C3 /* MGPersonController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MGPersonController.m; sourceTree = "<group>"; };
-		82B3A78D1C0BBE17000024C3 /* MGDemoTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MGDemoTableViewController.h; sourceTree = "<group>"; };
-		82B3A78E1C0BBE17000024C3 /* MGDemoTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MGDemoTableViewController.m; sourceTree = "<group>"; };
+		82B3A78D1C0BBE17000024C3 /* MGPeopleTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MGPeopleTableViewController.h; sourceTree = "<group>"; };
+		82B3A78E1C0BBE17000024C3 /* MGPeopleTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MGPeopleTableViewController.m; sourceTree = "<group>"; };
 		82B3A7901C0BC101000024C3 /* NSString+MGDemo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+MGDemo.h"; sourceTree = "<group>"; };
 		82B3A7911C0BC101000024C3 /* NSString+MGDemo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+MGDemo.m"; sourceTree = "<group>"; };
+		82B3A7931C0BD438000024C3 /* MGProfileTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MGProfileTableViewController.h; sourceTree = "<group>"; };
+		82B3A7941C0BD438000024C3 /* MGProfileTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MGProfileTableViewController.m; sourceTree = "<group>"; };
 		F6F0414B50C1A3B3297CE8F3 /* libPods-MicrosoftGraphUserProfileDemo.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-MicrosoftGraphUserProfileDemo.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -105,10 +108,12 @@
 		82B3A73D1C06CB3D000024C3 /* MicrosoftGraphUserProfileDemo */ = {
 			isa = PBXGroup;
 			children = (
+				82B3A7931C0BD438000024C3 /* MGProfileTableViewController.h */,
+				82B3A7941C0BD438000024C3 /* MGProfileTableViewController.m */,
 				82B3A7901C0BC101000024C3 /* NSString+MGDemo.h */,
 				82B3A7911C0BC101000024C3 /* NSString+MGDemo.m */,
-				82B3A78D1C0BBE17000024C3 /* MGDemoTableViewController.h */,
-				82B3A78E1C0BBE17000024C3 /* MGDemoTableViewController.m */,
+				82B3A78D1C0BBE17000024C3 /* MGPeopleTableViewController.h */,
+				82B3A78E1C0BBE17000024C3 /* MGPeopleTableViewController.m */,
 				82B3A7871C0BB77C000024C3 /* MGPerson.h */,
 				82B3A7881C0BB77C000024C3 /* MGPerson.m */,
 				82B3A7891C0BB77C000024C3 /* MGPersonController.h */,
@@ -352,13 +357,14 @@
 				82B3A7641C06CE65000024C3 /* MGUserProfileAPIClient.m in Sources */,
 				82B3A7431C06CB3D000024C3 /* AppDelegate.m in Sources */,
 				82B3A7751C06E101000024C3 /* MGUserProfileAPIClient+MGDemo.m in Sources */,
+				82B3A7951C0BD438000024C3 /* MGProfileTableViewController.m in Sources */,
 				82B3A7401C06CB3D000024C3 /* main.m in Sources */,
 				82B3A78C1C0BB77C000024C3 /* MGPersonController.m in Sources */,
 				82B3A78B1C0BB77C000024C3 /* MGPerson.m in Sources */,
 				82B3A7831C06E72B000024C3 /* MGAuthenticationController.m in Sources */,
 				82B3A7621C06CE65000024C3 /* MGAuthenticationManager.m in Sources */,
 				82B3A7631C06CE65000024C3 /* MGUser.m in Sources */,
-				82B3A78F1C0BBE17000024C3 /* MGDemoTableViewController.m in Sources */,
+				82B3A78F1C0BBE17000024C3 /* MGPeopleTableViewController.m in Sources */,
 				82B3A77D1C06E5E6000024C3 /* MGPlistReader.m in Sources */,
 				82B3A7791C06E491000024C3 /* MGConstants.m in Sources */,
 				82B3A7921C0BC101000024C3 /* NSString+MGDemo.m in Sources */,

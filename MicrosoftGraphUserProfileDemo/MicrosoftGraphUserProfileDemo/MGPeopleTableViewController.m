@@ -1,11 +1,12 @@
-#import "MGDemoTableViewController.h"
+#import "MGPeopleTableViewController.h"
 #import "MGPersonController.h"
 #import "MGPerson.h"
 #import "NSString+MGDemo.h"
 #import "MGAuthenticationController.h"
 #import <ADALiOS/ADErrorCodes.h>
+#import "MGProfileTableViewController.h"
 
-@interface MGDemoTableViewController () <UITableViewDataSource, UITableViewDelegate,MGAuthenticationControllerDelegate>
+@interface MGPeopleTableViewController () <UITableViewDataSource, UITableViewDelegate,MGAuthenticationControllerDelegate>
 
 @property (nonatomic) MGPersonController *personController;
 
@@ -14,7 +15,7 @@
 
 @end
 
-@implementation MGDemoTableViewController
+@implementation MGPeopleTableViewController
 
 #pragma mark - Getters & setters
 
@@ -284,6 +285,25 @@
 {
     if ([keyPath isEqualToString:@"people"]) {
         [self updatePersonDictionary];
+    }
+}
+
+#pragma mark - Navigation
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+    if ([segue.identifier isEqualToString:@"UserProfile"]) {
+        if ([sender isKindOfClass:[UITableViewCell class]]) {
+            UITableViewCell *cell = (UITableViewCell *)sender;
+            NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
+
+            NSString *sectionKey = [self keyForSectionIndex:indexPath.section];
+            NSArray *sectionArray = self.peopleDictionary[sectionKey];
+            MGPerson *selectedPerson = sectionArray[(NSUInteger)indexPath.row];
+
+            MGProfileTableViewController *profileTVC = (MGProfileTableViewController *)segue.destinationViewController;
+            profileTVC.person = selectedPerson;
+        }
     }
 }
 
