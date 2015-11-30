@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = "MicrosoftGraphUserProfile"
-  s.version      = "0.2.1"
+  s.version      = "0.2.2"
   s.summary      = "iOS library for fetching user info from the Microsoft Graph API"
   s.homepage     = "https://github.com/stephsharp/MicrosoftGraphUserProfile"
   s.license      = { :type => "MIT", :file => "LICENSE" }

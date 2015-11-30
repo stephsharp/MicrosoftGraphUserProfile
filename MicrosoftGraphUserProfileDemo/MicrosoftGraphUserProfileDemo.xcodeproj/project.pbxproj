@@ -8,15 +8,15 @@
 
 /* Begin PBXBuildFile section */
 		76792EC7A5356FA10A85022F /* libPods-MicrosoftGraphUserProfileDemo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F6F0414B50C1A3B3297CE8F3 /* libPods-MicrosoftGraphUserProfileDemo.a */; };
+		82408EDA1C0BECAA00A7C5E1 /* MGAuthenticationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 82408ED21C0BECAA00A7C5E1 /* MGAuthenticationManager.m */; };
+		82408EDB1C0BECAA00A7C5E1 /* MGUser.m in Sources */ = {isa = PBXBuildFile; fileRef = 82408ED41C0BECAA00A7C5E1 /* MGUser.m */; };
+		82408EDC1C0BECAA00A7C5E1 /* MGUserProfileAPIClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 82408ED61C0BECAA00A7C5E1 /* MGUserProfileAPIClient.m */; };
+		82408EDD1C0BECAA00A7C5E1 /* NSDictionary+MGUserProfile.m in Sources */ = {isa = PBXBuildFile; fileRef = 82408ED81C0BECAA00A7C5E1 /* NSDictionary+MGUserProfile.m */; };
 		82B3A7401C06CB3D000024C3 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 82B3A73F1C06CB3D000024C3 /* main.m */; };
 		82B3A7431C06CB3D000024C3 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 82B3A7421C06CB3D000024C3 /* AppDelegate.m */; };
 		82B3A7491C06CB3D000024C3 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 82B3A7471C06CB3D000024C3 /* Main.storyboard */; };
 		82B3A74B1C06CB3D000024C3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 82B3A74A1C06CB3D000024C3 /* Assets.xcassets */; };
 		82B3A74E1C06CB3D000024C3 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 82B3A74C1C06CB3D000024C3 /* LaunchScreen.storyboard */; };
-		82B3A7621C06CE65000024C3 /* MGAuthenticationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 82B3A7581C06CE65000024C3 /* MGAuthenticationManager.m */; };
-		82B3A7631C06CE65000024C3 /* MGUser.m in Sources */ = {isa = PBXBuildFile; fileRef = 82B3A75C1C06CE65000024C3 /* MGUser.m */; };
-		82B3A7641C06CE65000024C3 /* MGUserProfileAPIClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 82B3A75E1C06CE65000024C3 /* MGUserProfileAPIClient.m */; };
-		82B3A7651C06CE65000024C3 /* NSDictionary+MGUserProfile.m in Sources */ = {isa = PBXBuildFile; fileRef = 82B3A7601C06CE65000024C3 /* NSDictionary+MGUserProfile.m */; };
 		82B3A7741C06E101000024C3 /* MGAuthenticationManager+MGDemo.m in Sources */ = {isa = PBXBuildFile; fileRef = 82B3A7711C06E101000024C3 /* MGAuthenticationManager+MGDemo.m */; };
 		82B3A7751C06E101000024C3 /* MGUserProfileAPIClient+MGDemo.m in Sources */ = {isa = PBXBuildFile; fileRef = 82B3A7731C06E101000024C3 /* MGUserProfileAPIClient+MGDemo.m */; };
 		82B3A7791C06E491000024C3 /* MGConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 82B3A7781C06E491000024C3 /* MGConstants.m */; };
@@ -33,6 +33,15 @@
 /* Begin PBXFileReference section */
 		1084EB59DE569D8DD2A7B895 /* Pods-MicrosoftGraphUserProfileDemo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MicrosoftGraphUserProfileDemo.release.xcconfig"; path = "Pods/Target Support Files/Pods-MicrosoftGraphUserProfileDemo/Pods-MicrosoftGraphUserProfileDemo.release.xcconfig"; sourceTree = "<group>"; };
 		13949C28A218CF9A235EFB9F /* Pods-MicrosoftGraphUserProfileDemo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MicrosoftGraphUserProfileDemo.debug.xcconfig"; path = "Pods/Target Support Files/Pods-MicrosoftGraphUserProfileDemo/Pods-MicrosoftGraphUserProfileDemo.debug.xcconfig"; sourceTree = "<group>"; };
+		82408ED11C0BECAA00A7C5E1 /* MGAuthenticationManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MGAuthenticationManager.h; sourceTree = "<group>"; };
+		82408ED21C0BECAA00A7C5E1 /* MGAuthenticationManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MGAuthenticationManager.m; sourceTree = "<group>"; };
+		82408ED31C0BECAA00A7C5E1 /* MGUser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MGUser.h; sourceTree = "<group>"; };
+		82408ED41C0BECAA00A7C5E1 /* MGUser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MGUser.m; sourceTree = "<group>"; };
+		82408ED51C0BECAA00A7C5E1 /* MGUserProfileAPIClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MGUserProfileAPIClient.h; sourceTree = "<group>"; };
+		82408ED61C0BECAA00A7C5E1 /* MGUserProfileAPIClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MGUserProfileAPIClient.m; sourceTree = "<group>"; };
+		82408ED71C0BECAA00A7C5E1 /* NSDictionary+MGUserProfile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDictionary+MGUserProfile.h"; sourceTree = "<group>"; };
+		82408ED81C0BECAA00A7C5E1 /* NSDictionary+MGUserProfile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDictionary+MGUserProfile.m"; sourceTree = "<group>"; };
+		82408ED91C0BECAA00A7C5E1 /* MicrosoftGraphUserProfile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MicrosoftGraphUserProfile.h; sourceTree = "<group>"; };
 		82B3A73B1C06CB3D000024C3 /* MicrosoftGraphUserProfileDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MicrosoftGraphUserProfileDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		82B3A73F1C06CB3D000024C3 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		82B3A7411C06CB3D000024C3 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -41,15 +50,6 @@
 		82B3A74A1C06CB3D000024C3 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		82B3A74D1C06CB3D000024C3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		82B3A74F1C06CB3D000024C3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		82B3A7571C06CE65000024C3 /* MGAuthenticationManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MGAuthenticationManager.h; sourceTree = "<group>"; };
-		82B3A7581C06CE65000024C3 /* MGAuthenticationManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MGAuthenticationManager.m; sourceTree = "<group>"; };
-		82B3A7591C06CE65000024C3 /* MicrosoftGraphUserProfile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MicrosoftGraphUserProfile.h; sourceTree = "<group>"; };
-		82B3A75B1C06CE65000024C3 /* MGUser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MGUser.h; sourceTree = "<group>"; };
-		82B3A75C1C06CE65000024C3 /* MGUser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MGUser.m; sourceTree = "<group>"; };
-		82B3A75D1C06CE65000024C3 /* MGUserProfileAPIClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MGUserProfileAPIClient.h; sourceTree = "<group>"; };
-		82B3A75E1C06CE65000024C3 /* MGUserProfileAPIClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MGUserProfileAPIClient.m; sourceTree = "<group>"; };
-		82B3A75F1C06CE65000024C3 /* NSDictionary+MGUserProfile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDictionary+MGUserProfile.h"; sourceTree = "<group>"; };
-		82B3A7601C06CE65000024C3 /* NSDictionary+MGUserProfile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDictionary+MGUserProfile.m"; sourceTree = "<group>"; };
 		82B3A7701C06E101000024C3 /* MGAuthenticationManager+MGDemo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MGAuthenticationManager+MGDemo.h"; sourceTree = "<group>"; };
 		82B3A7711C06E101000024C3 /* MGAuthenticationManager+MGDemo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "MGAuthenticationManager+MGDemo.m"; sourceTree = "<group>"; };
 		82B3A7721C06E101000024C3 /* MGUserProfileAPIClient+MGDemo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MGUserProfileAPIClient+MGDemo.h"; sourceTree = "<group>"; };
@@ -146,34 +146,18 @@
 		82B3A7551C06CE65000024C3 /* MicrosoftGraphUserProfile */ = {
 			isa = PBXGroup;
 			children = (
-				82B3A7591C06CE65000024C3 /* MicrosoftGraphUserProfile.h */,
-				82B3A7561C06CE65000024C3 /* Authentication */,
-				82B3A75A1C06CE65000024C3 /* User */,
+				82408ED11C0BECAA00A7C5E1 /* MGAuthenticationManager.h */,
+				82408ED21C0BECAA00A7C5E1 /* MGAuthenticationManager.m */,
+				82408ED31C0BECAA00A7C5E1 /* MGUser.h */,
+				82408ED41C0BECAA00A7C5E1 /* MGUser.m */,
+				82408ED51C0BECAA00A7C5E1 /* MGUserProfileAPIClient.h */,
+				82408ED61C0BECAA00A7C5E1 /* MGUserProfileAPIClient.m */,
+				82408ED71C0BECAA00A7C5E1 /* NSDictionary+MGUserProfile.h */,
+				82408ED81C0BECAA00A7C5E1 /* NSDictionary+MGUserProfile.m */,
+				82408ED91C0BECAA00A7C5E1 /* MicrosoftGraphUserProfile.h */,
 			);
 			name = MicrosoftGraphUserProfile;
 			path = ../MicrosoftGraphUserProfile;
-			sourceTree = "<group>";
-		};
-		82B3A7561C06CE65000024C3 /* Authentication */ = {
-			isa = PBXGroup;
-			children = (
-				82B3A7571C06CE65000024C3 /* MGAuthenticationManager.h */,
-				82B3A7581C06CE65000024C3 /* MGAuthenticationManager.m */,
-			);
-			path = Authentication;
-			sourceTree = "<group>";
-		};
-		82B3A75A1C06CE65000024C3 /* User */ = {
-			isa = PBXGroup;
-			children = (
-				82B3A75B1C06CE65000024C3 /* MGUser.h */,
-				82B3A75C1C06CE65000024C3 /* MGUser.m */,
-				82B3A75D1C06CE65000024C3 /* MGUserProfileAPIClient.h */,
-				82B3A75E1C06CE65000024C3 /* MGUserProfileAPIClient.m */,
-				82B3A75F1C06CE65000024C3 /* NSDictionary+MGUserProfile.h */,
-				82B3A7601C06CE65000024C3 /* NSDictionary+MGUserProfile.m */,
-			);
-			path = User;
 			sourceTree = "<group>";
 		};
 		82B3A76F1C06E101000024C3 /* Categories */ = {
@@ -353,19 +337,19 @@
 			buildActionMask = 2147483647;
 			files = (
 				82B3A7741C06E101000024C3 /* MGAuthenticationManager+MGDemo.m in Sources */,
-				82B3A7651C06CE65000024C3 /* NSDictionary+MGUserProfile.m in Sources */,
-				82B3A7641C06CE65000024C3 /* MGUserProfileAPIClient.m in Sources */,
 				82B3A7431C06CB3D000024C3 /* AppDelegate.m in Sources */,
 				82B3A7751C06E101000024C3 /* MGUserProfileAPIClient+MGDemo.m in Sources */,
 				82B3A7951C0BD438000024C3 /* MGProfileTableViewController.m in Sources */,
 				82B3A7401C06CB3D000024C3 /* main.m in Sources */,
 				82B3A78C1C0BB77C000024C3 /* MGPersonController.m in Sources */,
+				82408EDC1C0BECAA00A7C5E1 /* MGUserProfileAPIClient.m in Sources */,
 				82B3A78B1C0BB77C000024C3 /* MGPerson.m in Sources */,
+				82408EDA1C0BECAA00A7C5E1 /* MGAuthenticationManager.m in Sources */,
+				82408EDB1C0BECAA00A7C5E1 /* MGUser.m in Sources */,
 				82B3A7831C06E72B000024C3 /* MGAuthenticationController.m in Sources */,
-				82B3A7621C06CE65000024C3 /* MGAuthenticationManager.m in Sources */,
-				82B3A7631C06CE65000024C3 /* MGUser.m in Sources */,
 				82B3A78F1C0BBE17000024C3 /* MGPeopleTableViewController.m in Sources */,
 				82B3A77D1C06E5E6000024C3 /* MGPlistReader.m in Sources */,
+				82408EDD1C0BECAA00A7C5E1 /* NSDictionary+MGUserProfile.m in Sources */,
 				82B3A7791C06E491000024C3 /* MGConstants.m in Sources */,
 				82B3A7921C0BC101000024C3 /* NSString+MGDemo.m in Sources */,
 			);

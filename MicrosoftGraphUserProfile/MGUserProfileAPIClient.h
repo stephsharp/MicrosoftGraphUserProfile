@@ -28,7 +28,7 @@
 - (void)fetchPhotoInfoWithUserId:(NSString *)userId
                completionHandler:(void (^)(NSDictionary *photoInfo, NSError *error))completionHandler;
 
-- (NSURL *)urlForPhotoWithUserId:(NSString *)userId size:(NSUInteger)size;
+- (NSURL *)urlForPhotoWithUserId:(NSString *)userId;
 
 @end
 
