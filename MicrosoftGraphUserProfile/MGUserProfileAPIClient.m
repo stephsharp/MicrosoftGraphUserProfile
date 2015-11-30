@@ -169,13 +169,15 @@ NSString* const MGUserPhotoErrorDomain = @"MGUserPhotoErrorDomain";
     NSURLRequest *request = [NSURLRequest requestWithURL:requestURL];
 
     [self fetchDataWithRequest:request completionHandler:^(NSData *data, NSError *error) {
-
-        NSDictionary *jsonPayload = [NSJSONSerialization JSONObjectWithData:data
-                                                                    options:0
-                                                                      error:NULL];
-        if (jsonPayload[@"error"]) {
-            NSError *error = [self userPhotoErrorWithJson:jsonPayload[@"error"]];
+        if (error) {
             completionHandler(nil, error);
+            return;
+        }
+
+        NSError *dataError = [self userPhotoErrorWithData:data];
+        if (dataError) {
+            completionHandler(nil, dataError);
+            return;
         }
 
         UIImage *image = [UIImage imageWithData:data];
@@ -197,15 +199,15 @@ NSString* const MGUserPhotoErrorDomain = @"MGUserPhotoErrorDomain";
             return;
         }
 
+        NSError *dataError = [self userPhotoErrorWithData:data];
+        if (dataError) {
+            completionHandler(nil, dataError);
+            return;
+        }
+
         NSDictionary *jsonPayload = [NSJSONSerialization JSONObjectWithData:data
                                                                     options:0
                                                                       error:NULL];
-
-        if (jsonPayload[@"error"]) {
-            NSError *error = [self userPhotoErrorWithJson:jsonPayload[@"error"]];
-            completionHandler(nil, error);
-        }
-
         completionHandler(jsonPayload, nil);
     }];
 }
@@ -258,6 +260,21 @@ NSString* const MGUserPhotoErrorDomain = @"MGUserPhotoErrorDomain";
 }
 
 #pragma mark - Error handling
+
+- (NSError *)userPhotoErrorWithData:(NSData *)data
+{
+    NSError *error = nil;
+
+    if (data) {
+        NSDictionary *jsonPayload = [NSJSONSerialization JSONObjectWithData:data
+                                                                    options:0
+                                                                      error:NULL];
+        if (jsonPayload[@"error"]) {
+            error = [self userPhotoErrorWithJson:jsonPayload[@"error"]];
+        }
+    }
+    return error;
+}
 
 - (NSError *)userPhotoErrorWithJson:(NSDictionary *)json
 {
