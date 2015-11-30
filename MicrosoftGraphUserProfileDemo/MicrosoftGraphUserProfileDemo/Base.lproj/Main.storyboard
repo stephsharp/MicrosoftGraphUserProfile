@@ -10,13 +10,13 @@
             <objects>
                 <tableViewController id="n02-cf-zAA" customClass="MGDemoTableViewController" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="kWd-Yh-uH8">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <rect key="frame" x="0.0" y="64" width="600" height="536"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <animations/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="PersonCell" textLabel="Bmt-N1-MTp" detailTextLabel="UyC-8N-D92" style="IBUITableViewCellStyleSubtitle" id="8lE-cX-dfZ">
-                                <rect key="frame" x="0.0" y="92" width="600" height="44"/>
+                                <rect key="frame" x="0.0" y="28" width="600" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="8lE-cX-dfZ" id="Nwi-ft-uh2">
                                     <rect key="frame" x="0.0" y="0.0" width="600" height="43.5"/>
@@ -60,7 +60,7 @@
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="K3J-dN-YA5" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="d2t-cS-fac">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" translucent="NO" id="d2t-cS-fac">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <animations/>
