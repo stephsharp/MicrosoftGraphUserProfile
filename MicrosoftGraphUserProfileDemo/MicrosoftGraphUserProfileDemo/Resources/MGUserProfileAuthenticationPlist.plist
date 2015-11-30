@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Tenant</key>
+	<string>e.g. yourTenantID.onmicrosoft.com/</string>
+	<key>RedirectURL</key>
+	<string></string>
+	<key>ClientID</key>
+	<string></string>
+	<key>Authority</key>
+	<string>https://login.microsoftonline.com/common</string>
+</dict>
+</plist>
