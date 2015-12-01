@@ -21,13 +21,14 @@
 - (instancetype)initWithPlist:(NSString *)plist;
 - (instancetype)init NS_UNAVAILABLE;
 
-// Call to get an access token.
 - (void)acquireAuthTokenWithResourceId:(NSString *)resourceId
                         promptBehavior:(ADPromptBehavior)promptBehavior
                      completionHandler:(void (^)(ADAuthenticationResult *result, NSError *error))completionBlock;
 
 - (void)acquireAuthTokenWithResourceId:(NSString *)resourceId
                      completionHandler:(void (^)(ADAuthenticationResult *result, NSError *error))completionBlock;
+
+- (void)cancel;
 
 @end
 

@@ -6,6 +6,7 @@
 #import <ADALiOS/ADAuthenticationSettings.h>
 #import <ADALiOS/ADLogger.h>
 #import <ADALiOS/ADInstanceDiscovery.h>
+#import <ADALiOS/ADAuthenticationBroker.h>
 
 @interface MGAuthenticationManager ()
 
@@ -98,6 +99,11 @@
                                        completionBlock(result, nil);
                                    }
                                }];
+}
+
+- (void)cancel
+{
+    [[ADAuthenticationBroker sharedInstance] cancel];
 }
 
 @end
